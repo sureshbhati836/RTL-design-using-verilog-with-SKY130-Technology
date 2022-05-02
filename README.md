@@ -819,65 +819,326 @@ CAVEAT 1:
 
 
 
+When inside an always block, the problem always occurs. The statements in Blocking Statements are executed in the order that they are written. The first statement is always evaluated first, followed by the second (like a C program). The statements in Non-Blocking Statements are executed in parallel. Before being assigned to the left side, all assignments on the right side will be assessed.
 
 
 
+Assignment	         Statement
+  =	               Blocking Statment
+  <=	              Non-Blocking Statment
+
+
+module code (input clk,input reset,
+input d,
+output reg q);
+always @ (posedge clk,posedge reset)
+begin
+if(reset)
+begin
+        q0 = 1'b0;
+        q = 1'b0;
+end
+else
+        q = q0;
+        q0 = d;    
+end
+endmodule
+
+the code will result in
+
+![image](https://user-images.githubusercontent.com/104729600/166230075-3ca13cd7-3228-4921-8000-21373e5ed53c.png)
+
+
+When two flops, like illustrated above, are combined, the code creates a shift register. The blocking statements are represented by the assignments within the code. Assigning 1 bit 0s to q0 and q results in an asynchronous reset connection. In the latter sections, however, q0 is allocated to q, and then d is assigned to q0. Let's say there's a modification in the code.
+
+
+module code (input clk,input reset,
+input d,
+output reg q);
+always @ (posedge clk,posedge reset)
+begin
+if(reset)
+begin
+        q0 = 1'b0;
+        q = 1'b0;
+end
+else
+        q0 = d;
+        q = q0;    
+end
+endmodule
+
+
+d is assigned to q0 in this scenario, and subsequently q0 is assigned to q. As a result, q0 has the value of d by the time the second statement is run. Only one flip will be implemented as a result of this. Previously, q had the value q0 and q0 had the value d, resulting in the use of two storage elements.
+
+ ### 2. Usage of non-blocking statements
+
+
+module code (input clk,input reset,
+input d,
+output reg q);
+always @ (posedge clk,posedge reset)
+begin
+if(reset)
+begin
+        q0 <= 1'b0;
+        q <= 1'b0;
+end
+else
+        q0 <= d;
+        q <= q0;   
+end
+endmodule
+
+
+As a result, the order doesn't matter because RHS is evaluated first, followed by assignment. The presence of two flops, regardless of their order. When writing sequential circuits, always utilise non-blocking statements.
+
+### CAVEAT 2: Causing Synthesis Simulation Mismatch
+
+module code (input a,b,c
+output reg y);
+reg q0;
+always @ (*)
+begin
+        y = q0 & c;
+        q0 = a|b ;    
+end 
+endmodule
 
 
 
+The code aims to generate a y = (A+B) function. C. Because there are blocking statements in the given code, they are evaluated in order when it enters always block. As a result, y is assessed first (q0.C), with q0 corresponding to the outcome of the preceding iteration. Only the second statement updates the q0 value.
+
+
+Time	                         Logic
+During Simulation           	Logic creates a delay or flop
+During Synthesis	            Logic will not have a flop
+
+When the order of the statements is changed: In this case, a OR b is evaluated first and the latest value is used for calculating y.
 
 
 
+module code (input a,b,c
+output reg y);
+reg q0;
+always @ (*)
+begin
+        q0 = a|b ;
+        y = q0 & c;
+end 
+endmodule
+
+As a result, it's critical to run the GLS on the netlist and compare the results to the specifications to verify there's no simulation synthesis mismatch.
 
 
+### EXPERIMENTS WITH GLS
 
+//Steps Followed: 
+1. opening the file
+( gvim ternary_operator_mux.v)
+2.PERFORMING SIMULATION
+3. Load the design in iVerilog by giving the verilog and testbench file names
+( iverilog ternary_operator_mux.v tb_ternary_operator_mux.v)
+4.To dump the VCD file
+(./a.out)
+5.To load the VCD file in GTKwaveform
+(gtkwave tb_ternary_operator_mux.vcd)
+6.PERFORMING SYNTHESIS
+7.Invoke Yosys
+(yosys)
+8. Read library 
+( read_liberty -lib ../my_lib/lib/sky130_fd_sc_hd__tt_025C_1v80.lib)
+9. Read Design
+(read_verilog ternary_operator_mux.v)
+10. Synthesize Design - this controls which module to synthesize
+(synth -top ternary_operator_mux)
+11. Generate Netlist
+( abc -liberty ../my_lib/lib/sky130_fd_sc_hd__tt_025C_1v80.lib)
+12.Realizing Graphical Version of Logic for single modules
+( show )
+13. Write Verilog netlist
+( write_verilog ternary_operator_mux_net.v)
+14. PERFORMING GLS
+15.Opening Verilog Models, Netlist and Test Bench
+(iverilog ../my_lib/verilog_model/primitives.v ../my_lib/verilog_model/
+sky130_fd_sc_hd.v ternary_operator_mux_net.v tb_ternary_operator_mux.v)
+16.To dump the VCD file
+(./a.out)
+17. to load the VCD file in GTKwaveform
+(gtkwave tb_ternary_operator_mux.vcd)
 
+#### CASE 1: ternary_operator.v
 
+it is the simplest method to define a 2 to 1   mux as the complexity increses it became more complex and unable to handle.
+syntax :
 
+ #### <Condition>?<True>:<False>
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166231890-c674d6ac-0592-4b1d-a1af-0607dd3175fe.png)
+ 
+ 
+ after simulation 
+ 
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166232003-00d8af7d-ea93-444c-84db-3f378f448d54.png)
 
+ fig : Statistics showing a flop inferred
 
+ ![image](https://user-images.githubusercontent.com/104729600/166231917-2831805f-17dc-4fa8-9d53-79e915b75439.png)
 
+fig : Realization of the Logic after synthesis
+ 
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166232157-4077b126-73fc-4aa1-9f2d-d2c674cba703.png)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ O NAND gate with i1 and sel, inverted io, and Or to And invert gate with sel and inverted i0 as inputs. The expression = sel'.i0 + sel.i1 yields the output y.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
