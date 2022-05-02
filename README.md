@@ -10,56 +10,8 @@ A cloud-based workshop on verilog encoding directives, resulting in predictable 
 •	Creating testbenches to validate the functionality of the RTL design
 •	Logic synthesis of functional RTL code
 
-# TABLE OF CONTENTS
-## day1
-1)	Introduction to Verilog RTL Design and Synthesis
-a)	Introduction to verilog rtl design and synthesis
-b)	Introduction to the tools
-c)	Block diagram of Design and test bench modules 
-d)	Block diagram Simulation flow
-e)	Environment setup
-f)	Multiplexer 
-g)	Good mux implementation using iverilog
-h)	Gtkwave analysis
-i)	Introduction to yosys and logic synthesis
-j)	Design logic synthesis
-## day2
-2)	Timing Libs, Hierarchial Vs Flat Synthesis and Efficient Flop Coding Styles
-a)	Understanding the library
-b)	contents of the library file
-c)	flat synthesis
-d)	sub module level synthesis
-e)	flip flop overview
-f)	flip flop synthesis
-g)	flip flop simulation
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+![Screenshot (916)](https://user-images.githubusercontent.com/104729600/166253806-80917cbb-1422-43c0-a3b5-a8af30e78770.png)
 
 
 
@@ -73,7 +25,13 @@ A low-level abstraction for representing a design circuit is the Register Tranfe
 ##	GTKWave - GTKWave is an open-source vcd(value change dump) waveform viewer.
 ##	Yosys - Yosys is an open-source synthesis tool. These are the open-source tools used in the labs for the workshop.
 
+# DAY1 
+
+![Screenshot (917)](https://user-images.githubusercontent.com/104729600/166254276-8d6bd927-2903-4a70-9100-257e364d3b3c.png)
+
+
 ##	BLOCK DIGRAM OF DESIGN AND TESTBENCH MODULES
+
 ![Screenshot (893)](https://user-images.githubusercontent.com/104729600/166175295-d16caaf5-e3ed-41a9-b22c-665860030e65.png)
 
 Design module may have one or more primary inputs and primary outputs. However, testbench will not have any primary input or output.
@@ -83,12 +41,13 @@ Design module may have one or more primary inputs and primary outputs. However, 
 
 
 ##	ENVIRONMENT SETUP
-•	#Steps Followed:
-•	//create a directory
-•	$ mkdir VLSI 
-•	//Git Clone vsdflow. 
+#Steps Followed:
+1. create a directory
+2.  mkdir VLSI 
+3. Git Clone vsdflow. 
 
 The sky130RTLDesignAndSynthesisWorkshop Directory contains the following files: My Lib - which contains all of the necessary library files; lib - which contains all of the standard cell libraries to be used in synthesis; and verilog model - which contains all of the standard cell verilog models for the standard cells in the lib. All of the experiments for lab sessions are stored in the verilog files folder, which includes both verilog and test bench code.
+
 
 ![image](https://user-images.githubusercontent.com/104729600/166175402-81462c4f-4122-4dd4-8d51-194f5656b3f4.png)
 
@@ -97,54 +56,62 @@ The sky130RTLDesignAndSynthesisWorkshop Directory contains the following files: 
 
  2-to-1 multiplexer consists of two inputs D0 and D1, one select input S and one output Y. Depending on the select signal, the output is connected to either of the inputs. Since there are two input signals, only two ways are possible to connect the inputs to the outputs, so one select is needed to do these operations.
  
+ 
  ![Screenshot (895)](https://user-images.githubusercontent.com/104729600/166175536-e8b976b2-dcef-4540-8c88-fd43b7c57322.png)
  
+ 
  #Steps Followed:
-•	Load the design in iVerilog by giving the verilog and testbench file names
-•	iverilog good_mux.v tb_good_mux.v 
-•	List so as to ensure that it has been added to the simulator
-•	 ls
-•	To dump the VCD file
-•	./a.out
-•	To load the VCD file in GTKwaveform
-•	gtkwave tb_good_mux.vcd
+1	Load the design in iVerilog by giving the verilog and testbench file names
+(iverilog good_mux.v tb_good_mux.v )
+2. List so as to ensure that it has been added to the simulator
+( ls)
+3.	To dump the VCD file
+(./a.out)
+4.To load the VCD file in GTKwaveform
+(gtkwave tb_good_mux.vcd)
 
 ![image](https://user-images.githubusercontent.com/104729600/166175569-14b7888d-8f62-44e7-9666-f5a16b404718.png)
-
+ 
+ 
 ![image](https://user-images.githubusercontent.com/104729600/166175582-0af18d89-76a0-479a-ab8e-acc7d45f807b.png)
 
 
 •	GTKWave is the waveform analyzer and is the primary tool used for visualization and thereby to check the design functionality.
 
 ##	INTRODUCTION TO YOSYS AND LOGIC SYNTHESIS
+
 The tool Synthesizer (Yosys) is used to convert RTL to netlist. The netlist is a common cell-based representation of the design (in the form of the cells present in the .lib). The design and the netlist file should be same. The optimization stage of the CAD process, where the RTL code is turned into a netlist, is known as logic synthesis. The stimulus should be the same as the RTL simulation's output. The code for the design was written in Verilog, and the usual cell format of the code is netlist. Between the RTL design and the synthesised netlist, the fundamental inputs and outputs will be the same. It means that we can use the same testbench that we used for RTL design.
 
 
 ![Screenshot (896)](https://user-images.githubusercontent.com/104729600/166175646-6a857915-7536-4582-94a9-191b9a61b213.png)
 
 ## Synthesis of Logic
+
 The behavioural representation in HDL form for the needed specification is known as RTL Design.The design is transformed into gates, and the interconnections between the gates are created. This is distributed in the form of a file called netlist. To get the netlist file, we mix the RTL design with.lib and synthesise it.
 
-•	.lib file is a collection of logical modules which includes all basic logic gates. It may also contain different flavors of the same gate (2 input AND, 3 input AND – slow, medium and fast version).
+
+.lib file is a collection of logical modules which includes all basic logic gates. It may also contain different flavors of the same gate (2 input AND, 3 input AND – slow, medium and fast version).
                         
 ![Screenshot (897)](https://user-images.githubusercontent.com/104729600/166175730-54835699-d50e-4d61-a92d-1386f5371b4c.png)
+
 
 ## 	DESIGN LOGIC SYNTHESIS
 Steps Followed:
 1)	Invoke Yosys
-2)	yosys
-3)	Read library 
-4)	read_liberty -lib ../my_lib/lib/sky130_fd_sc_hd__t_025C_1v80.lib
-5)	Read Design
-6)	read_verilog good_mux.v
-7)	Synthesize Design
-8)	synth -top good_mux
-9)	Generate Netlist
-10)	abc -liberty ../my_lib/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
-11)	Realizing Graphical Version of Logic
-12)	show
-13)	Writing the netlist 
-14)	write_verilog -noattr good_mux_netlist.v
+(	yosys)
+2)	Read library 
+(	read_liberty -lib ../my_lib/lib/sky130_fd_sc_hd__t_025C_1v80.lib)
+3)	Read Design
+(	read_verilog good_mux.v)
+4)	Synthesize Design
+(	synth -top good_mux)
+5)	Generate Netlist
+(	abc -liberty ../my_lib/lib/sky130_fd_sc_hd__tt_025C_1v80.lib)
+6)	Realizing Graphical Version of Logic
+(	show)
+7)	Writing the netlist 
+(	write_verilog -noattr good_mux_netlist.v)
+
 
 FIG: Steps for Design Synthesis
 ![image](https://user-images.githubusercontent.com/104729600/166175798-856d4fc3-647f-4ba4-bebc-c152ceff5dea.png)
@@ -1310,57 +1277,184 @@ inspection :  When select signal is 00, the output follows i0 and is i1 when the
 ![image](https://user-images.githubusercontent.com/104729600/166244361-d727c457-5c8c-4d7a-a7e4-18035b8483ab.png)
 
  
- Synthesis Output
+ fig : Synthesis Output
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166245389-0955ebf9-e6f8-424b-a7cc-c4495f0cfe13.png)
+
+ The synthesized design has a latch due to partial case statement for output x. Though we write default condition, there can be inferred latches.
+ 
+ #### CASE 4: overlapping case statement
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166245559-4b4b94c6-8c2c-470b-90a2-d517c8c44f54.png)
+
+ 
+ When the choose input is 10 or 11 and the bit can be either 0 or 1, there is overlapping of output, despite the case structure not being full. As a result, the simulator may be perplexed.
  
  
+ fig : Simulation Output
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166246030-dd2552fd-d807-4d75-bc5c-6ba52ae29f0c.png)
+
+ obs :  when the select input is 11, the output value is latched to a value.
+ 
+fig :  Synthesis Statistics Report
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166246180-5d6017a6-4805-439a-88e4-5fb67a01022f.png)
+
+ fig : synthesis Output
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166246232-b427af45-398b-41cd-8040-a394aade49d0.png)
+
+ 
+ obs : It can be inferred that there is no Latch in the synthesized netlist as the case structure is complete (no presence of inferred latches)
  
  
+fig :  GLS Output
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166246451-ce975e74-8b48-469e-b570-8996af613cb9.png)
+
+ obs :  There is no latch observed in the output. The synthesizer tool does not get confused. Hence there is a Synthesis Simulation Mismatch due to overlapping of legs in the code. Care must be taken to address the legs individually without any overlap (mutually exlusive code)
  
  
+ ## STATEMENTS USING FOR
+ 
+ Understanding the Usage of For and Generate Statements:
  
  
+ ![Screenshot (912)](https://user-images.githubusercontent.com/104729600/166247114-af2b0960-00fe-41b1-b91c-2bc311e0a0da.png)
+
+ ### CASE 1: using generate if statement
+ 
+fig:  Verilog file
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166247227-881bdbef-b057-4997-a712-86b4998a6bd9.png)
+
+ obs : The structure is complete and expected to behave as a 4x1 multiplexer
  
  
+ fig : Simulation Output
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166247374-5f04b354-bcae-4ffb-9984-63a729988b96.png)
+
+ ![Screenshot (913)](https://user-images.githubusercontent.com/104729600/166247677-96d4b437-c97a-42db-b556-0d0028175b1a.png)
+
+ #### CASE 2: demux using case statement.v
+ 
+ fig :Verilog file
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166247822-eea89dbb-7240-4dcf-9df2-47bdcf07313a.png)
+
+  To avoid inferring laches, all of the outputs are set to 0. The input is assigned to one of the outputs based on the select line.
+ 
+ fig : Simulation Output
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166248084-da42b2b5-260a-45ab-bd17-b1e24f05d08d.png)
+
+ 
+ obs: It has the behaviour of a 1x8 multiplexer, as seen below:
+ 
+ ![Screenshot (914)](https://user-images.githubusercontent.com/104729600/166248433-f9fe3444-f6a4-41d2-930e-d8161302b63f.png)
+
+ 
+ fig: Synthesis Statistics Report
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166248565-6e4dc92f-2a22-443f-b9e5-9dd0de1741cc.png)
+
+ 
+ fig: Synthesis Output
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166248646-1d9ef50f-3caa-4ed8-bcda-7df3de902bc4.png)
+
+ Because the case structure is complete, it can be assumed that there is no Latch in the synthesised netlist (no presence of inferred latches)
+ 
+ fig : GLS Output
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166248841-8d245ce3-1778-470e-bafe-30afa2e114e2.png)
+
+ 
+obs:  in both simulation and synthesis, the observed waveform matches and adheres to code functionality.
  
  
+###  CASE 3: demux using generate if statement.v
+ 
+
+ When using demux with a create if statement, the results are the same as when using demux with a case statement. The advantage of utilising create if statements, on the other hand, is that the number of lines in the code virtually stays the same as the number of input lines in the demultiplexer increases.
+ 
+fig:  Verilog file
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166249180-f4459a2f-b009-44a6-aeff-f44d24847f47.png)
+
+fig:  Simulation Output
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166249249-467ba9a3-35e2-4047-b4d0-83374308457c.png)
+
+ 
+ fig:  Synthesis Statistics Report
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166249321-81675a10-f6bf-4b95-b54b-d931825b65f9.png)
+
+ fig: Simulation Output
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166249416-fd704351-3e23-4635-a8f0-79a3797bde3c.png)
+
+ 
+ fig: Synthesis Statistics Report
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166249493-f55582e9-0cb6-44e8-a6dc-5650f916640c.png)
  
  
+ fig: Synthesis Output
+ 
+
+ ![image](https://user-images.githubusercontent.com/104729600/166249550-c1027828-7a06-44d7-a651-874cf9bf6352.png)
+
+ fig: GLS Output
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166249665-9619cab0-1cf2-42ed-be8e-caca7b38882d.png)
+
+ obs: The observed waveform in simulation and synthesis matches and conforms code functionality.
+ 
+ ## STATEMENTS USING GENERATE
+ 
+ Experiment on Ripple Carry Adder
+ 
+  Instantiating the full adder in a loop to replicate the hardware
+ 
+ fig: Verilog file
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166249946-2dc6b1a0-3ea4-408f-8647-512e911abf9e.png)
+
+ 
+ If both inputs are n bits, the output is always n+1 bits. We need to tell the definition of full adder because we are instantiating a full adder from a separate file. It's also clear that there isn't always a block in use. 
+ 
+ fig: Simulation Output
+ 
+ ![Screenshot (915)](https://user-images.githubusercontent.com/104729600/166252976-639ce543-7347-44e8-a2e8-057a46f5f715.png)
  
  
+ ![image](https://user-images.githubusercontent.com/104729600/166250196-9744a522-89c1-4ab9-83dc-7cb6db96e4a0.png)
+
  
+ fig: Synthesis Statistics Report
  
+ ![image](https://user-images.githubusercontent.com/104729600/166250269-5f14ec1a-7d9a-420d-9076-7471af70137a.png)
+
+ fig:  Synthesis Output - rca
  
+ Before read fa, read verilog for rca is run.
  
+ ![image](https://user-images.githubusercontent.com/104729600/166250555-b2e94e5a-1c34-459a-a3c3-48b48eb35479.png)
+
  
+ fig: Synthesis Output - fa
  
+ ![image](https://user-images.githubusercontent.com/104729600/166250668-3046ac10-293b-45a9-ad5d-be0af02c112e.png)
+
+
  
+
  
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
+
  
  
  
