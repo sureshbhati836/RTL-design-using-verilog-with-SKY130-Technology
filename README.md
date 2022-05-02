@@ -593,6 +593,288 @@ fig : logic from verilog file
 ![image](https://user-images.githubusercontent.com/104729600/166192857-0d61fc0b-5217-4e5c-990e-fa59bf8cd1ff.png)
 
 
+There are two flips here; one is reset if the condition is Q, and the other is reset if the condition is D. With reset applied, Q1 waits for the next positive edge of the clock. Due to the TCK delay effect on the preceding flop, the subsequent flop will sample the value of 0. Except for one clock cycle, the output Q will always be high. Both flops should be present, and they will not be optimised.
+
+fig : verifying the Observation using Simulation 
+
+![image](https://user-images.githubusercontent.com/104729600/166194356-82893667-cfb7-4511-9c8d-f088e128096b.png)
+
+fig : Statistics showing both flops being inferred
+
+
+![image](https://user-images.githubusercontent.com/104729600/166194420-5b0eefe8-917a-493e-8ceb-d6813c1e6415.png)
+
+
+fig : Realization of the Logic
+![image](https://user-images.githubusercontent.com/104729600/166194479-57c1a390-38d2-433f-99fb-7467a076b245.png)
+
+### CASE 4: dff_const4.v
+
+fig :  logic from verilog file
+![image](https://user-images.githubusercontent.com/104729600/166194541-c8742ccc-4a3d-4ad6-b6b4-1e1dac004f9b.png)
+
+Because the output lines of both flops are constant 1, they are expected to be optimised. There will be no flops inferred from the generated netlist.
+
+fig :  Observation using Simulation
+
+![image](https://user-images.githubusercontent.com/104729600/166194818-206c2a7e-d132-4c62-9ed2-578d5edbdb78.png)
+
+fig : showing no flops being inferred
+
+![image](https://user-images.githubusercontent.com/104729600/166194866-2a79e86b-a4b5-48e7-a802-53cbe00c3ef0.png)
+
+fig : Realization of the Logic after synthesis
+
+![image](https://user-images.githubusercontent.com/104729600/166194941-bdd2a0d6-81e6-4e7a-8667-1826e6433898.png)
+
+
+As a result, the optimised graphical realisation has no inferred flops and has a constant value of 1, regardless of the reset or clock signals.
+
+
+### CASE 5: dff_const5.v
+
+fig: logic from verilog file
+
+![image](https://user-images.githubusercontent.com/104729600/166195101-2589be30-c9c4-4235-9c78-92846e6c86d6.png)
+
+fig: Observation using Simulation
+
+![image](https://user-images.githubusercontent.com/104729600/166195147-879219c5-c241-4383-ad70-1cd28a4630bb.png)
+
+fig: Statistics 
+
+![image](https://user-images.githubusercontent.com/104729600/166195197-f90c53d6-92e8-4e94-ba0a-e8003e92d007.png)
+
+
+fig:  Realization of the Logic after synthesis
+
+![image](https://user-images.githubusercontent.com/104729600/166195275-8b84113e-e287-4154-8409-dada754e5678.png)
+
+The optimized graphical realization have the same flop inferred twice.
+
+
+
+## SEQUENTIAL UNUSED OUTPUT OPTIMIZATION
+
+//Steps Followed for each of the unused output optimization problems:
+1. opening the file
+( gvim counter_opt.v)
+2. Invoke Yosys
+ (yosys)
+3. Read library 
+( read_liberty -lib ../my_lib/lib/sky130_fd_sc_hd__tt_025C_1v80.lib)
+4. Read Design
+(read_verilog opt_check.v)
+5. Synthesize Design - this controls which module to synthesize
+( synth -top opt_check)
+6. To perform constant propogation optimization
+(opt_clean -purge)
+7. Generate Netlist
+(abc -liberty ../my_lib/lib/sky130_fd_sc_hd_-tt_025C_1v80.lib)
+8.Realizing Graphical Version of Logic for single modules
+( show )
+
+
+### CASE 1: counter_opt.v
+fig : logic from verilog file
+
+![image](https://user-images.githubusercontent.com/104729600/166195694-a190aa2b-0139-4ef2-9e84-22696fd6a368.png)
+
+
+
+![image](https://user-images.githubusercontent.com/104729600/166195712-7a199a04-874b-4e3f-bfe1-3b790c968307.png)
+
+
+If the counter is reset, it is reset to 0, otherwise it is increased, similar to an upcounter. Because it's a three-bit signal, the counter resets after seven. However, because the final output q only senses the count [0], the bit toggles every clock cycle (000, 001, 010 ...111). The other two outputs aren't used, thus there's no output dependency. As a result, these unused outpus do not need to be included in the design.
+
+
+fig : Statistics showing only one flop inferred instead of 3 flops sinces it is a 3 bit counter
+
+![image](https://user-images.githubusercontent.com/104729600/166195891-e24d7631-a4b8-4a41-b69f-252f64aadb69.png)
+
+
+fig: Realization of the Logic
+
+![image](https://user-images.githubusercontent.com/104729600/166195932-1ed8556e-837c-4c2e-8e69-5b8a643811cf.png)
+
+To accomplish the toggle function, the optimised graphical realisation output Q (count0) is sent to the NOT gate. The other outputs that do not rely on the primary output are turned off.
+
+
+### CASE 2: counter_opt2.v
+
+
+//Steps Followed:
+1. Copying the code to a new file
+2.  cp counter_opt.v counter_opt2.v
+3.  gvim counter_opt2.v
+4. Changes made in the verilog code, i for insert mode: 
+5.  assign q = [count2:0] == 3'b100;
+
+ fig : logic from verilog file
+
+![image](https://user-images.githubusercontent.com/104729600/166196586-1ccae8bf-a21c-4ff5-b537-25ce89438de1.png)
+
+Because all three bits of the counter are used in this scenario, the optimised netlist should have three flops.
+
+fig :Statistics showing all three flops inferred
+
+
+![image](https://user-images.githubusercontent.com/104729600/166196769-df20d5c2-9892-441f-b16f-72299da5bdc9.png)
+
+fig : Graphical Realization of the Logic
+
+
+![image](https://user-images.githubusercontent.com/104729600/166196820-0e929019-075f-4dac-889e-f97883f5c636.png)
+
+
+
+All three flips are visible. Because incremental logic is required, the logic other than flops serves as the adder circuit. 
+q = counter2.counter1'.counter0' is the output expression. As a result, all outputs that have no direct impact on the principal output will be optimised away.
+
+
+
+
+# DAY 4
+
+TOPICS COVERED
+1.	GATE LEVEL SIMULATION
+2.	SYNTHESIS SIMULATION MISMATCH
+3.	EXPERIMENTS WITH GLS
+4.	MISSING SENSITIVITY LIST
+5.	CAVEATS IN BLOCKING ASSIGNMENTS
+
+## 1.GATE LEVEL SIMULATION
+#### What is GLS?
+
+The design's functioning was tested using stimulus inputs, and the output was checked for compliance using a test bench module. The DUT was determined to be the RTL design (Design Under Test). The Netlist is referred to as the Design Under Test in Gate Level Simulation. The RTL code that was converted to Standard Cell Gates is logically the same as the Netlist. As a result, the test bench will be consistent with the design.
+
+
+#### Advantages of GLS:
+
+1. After Synthesis, logically test the design's accuracy.
+2. Timing was not taken into account during the RTL Simulation. However, in actual applications, it is necessary to ensure that the design's time is met.
+
+
+![image](https://user-images.githubusercontent.com/104729600/166197304-eb3f6254-4827-47a5-9d1f-00c67ba5be2a.png)
+
+The meaning of the Netlist is given to the iVerilog using Gate Level Verilog Models, which are made up of all standard cells that have been instantiated. Verilog models at the gate level can be functional or timing aware. GLS can be used for timing validation as well as functional validation if the gate level models are delay annotated.
+
+
+## 2. SYNTHESIS SIMULATION MISMATCH
+
+What is the point of validating netlist's functioning if it is a real reciprocation of RTL? There could be a mismatch between synthesis and simulation for the following reasons:
+1. Absence of Sensitivity List
+2. Blocking Vs Non Blocking Assignments
+3. Non Standard Verilog Coding
+
+
+### 1. Absence of Sensitivity List:
+
+
+module mux(
+input i0,input i1
+input sel,
+output reg y
+);
+always @ (sel)
+begin
+   if (sel)
+            y = i1;
+   else 
+            y = i0;          
+end
+endmodule
+
+
+Simulator's output only changes when the input changes. When there is no action, the output is not evaluated. When the select is changing (when select is 1), the output is 1 when the input is 1 and 0 when the input is 0. The always block only evaluates when the choose pin transitions, and it is unaffected (the output does not reflect) by changes in the inputs 0 and 1.
+
+
+Time	Logic
+During Simulation	-----Logic acts as a Latch/Double edged Flop
+During Synthesis	 -----Logic acts as a Mux
+
+Corrected code for missing sensitivity list:
+
+module mux(
+input i0,input i1
+input sel,
+output reg y
+);
+always @ (*)
+begin
+   if (sel)
+            y = i1;
+   else 
+            y = i0;        
+end
+endmodule
+
+
+
+As a result, the mismatch is fixed by using always @ (*), in which the always block is evaluated whenever a signal changes. As a result, any changes in the inputs will be reflected in the output.
+
+
+### 2. Blocking Vs Non Blocking Statments in Verilog:
+CAVEAT 1:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
