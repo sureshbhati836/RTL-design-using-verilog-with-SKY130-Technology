@@ -240,7 +240,9 @@ o	!gvim multiple_modules_hier.v
 
 SUBMODULE REALIAZATION OF SUBMODULE
 ![image](https://user-images.githubusercontent.com/104729600/166176270-ef1a277d-1c3a-4c7d-b6ed-642ae91b1076.png)
-
+Statistics of Sub-module
 ![image](https://user-images.githubusercontent.com/104729600/166176307-3e7988dd-218d-4119-a338-f1da5b2580da.png)
-
+ fig :NetList File of Sub-module
 ![image](https://user-images.githubusercontent.com/104729600/166176341-bdb9a152-fbcf-474b-8d66-0bf1c05f049e.png)
+
+##FLIP FLOP OVERVIEW
