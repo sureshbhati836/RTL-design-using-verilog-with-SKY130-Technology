@@ -239,10 +239,128 @@ o	write_verilog -noattr multiple_modules_hier.v
 o	!gvim multiple_modules_hier.v
 
 SUBMODULE REALIAZATION OF SUBMODULE
+
 ![image](https://user-images.githubusercontent.com/104729600/166176270-ef1a277d-1c3a-4c7d-b6ed-642ae91b1076.png)
+
 Statistics of Sub-module
 ![image](https://user-images.githubusercontent.com/104729600/166176307-3e7988dd-218d-4119-a338-f1da5b2580da.png)
  fig :NetList File of Sub-module
 ![image](https://user-images.githubusercontent.com/104729600/166176341-bdb9a152-fbcf-474b-8d66-0bf1c05f049e.png)
 
 ##FLIP FLOP OVERVIEW
+When an input signal changes state in a digital design, the output signal changes after a propagation delay. Singals are delayed by all logic gates. These delays generate expected and unwanted transitions in the output, known as Glitches, in which the output value differs from the predicted value for a brief period of time. When the signals are merged at the output gate, an increase in delay on one line can produce a glitch. In other words, more combinational circuits result in more glitchy outputs that do not settle with the output value.there is a need to store the values called as flop elements. D Flip-flops (aka Data or Delay Flip Flops) are the widely storage elements used to restrict the glitches.
+
+![image](https://user-images.githubusercontent.com/104729600/166182674-4a6a6a59-e040-4acd-b985-3de6dab55845.png)
+
+Flop elements hold a single bit of data and can be in one of two states: 0 or 1. They're sandwiched between the combinational circuits, and the output of the flop changes as the clock edge approaches. Although the input is erratic, the outcome is consistent. As a result, the next combinational circuit will get a stable input, and its output will be predictable and stable.
+
+ RTL codeing of a Flip Flop:
+Every flop element needs an initial state, else the combinational circuit will evaluate to a garbage value. In order to achieve this, there are control pins in the flop namely: Set and Reset which can either be Synchronous or Asynchronous.
+
+### Asynchronous Reset/Set:
+
+![image](https://user-images.githubusercontent.com/104729600/166182756-8a4c8889-0ae2-4f47-a467-8b03d587c695.png)
+
+![image](https://user-images.githubusercontent.com/104729600/166182778-f3c061be-9342-4947-abcc-d4e0a4b994bd.png)
+
+When there is a change in the clock or the set/reset, the always block is evaluated. The circuit is sensitive to the clock's positive edge. The singal q line changes as the signal goes low/high, depending on the reset or set control. As a result, it does not occur on the clock's positive edge and occurs regardless of the time.
+
+### Synchronous Reset:
+![image](https://user-images.githubusercontent.com/104729600/166182833-0246c1b4-75a6-496e-8ba7-bd65064636c0.png)
+
+The singal is always waiting for the clock and is set to the D Pin of the flop. The D pin will wait for the clock's positive edge, and if it occurs, the output will alter accordingly. Only posedge clk is included in the sensitivity list.
+
+### Both Synchronous and Asynchronous Reset:
+
+![image](https://user-images.githubusercontent.com/104729600/166182890-48be43e1-fba4-4213-8170-c1034a4b2891.png)
+
+When utilising the Set and Reset control pins, use caution as they may cause race circumstances. The always block is checked for the clock's positive edge and asynchronous reset. The use of else if means that the always block has been assessed due to the clock's positive edge.
+
+FLIP FLOP SIMULATION
+#Steps Followed for analysing Asynchronous behavior:
+1. Load the design in iVerilog by giving the verilog and testbench file names
+       ( iverilog dff_asyncres.v tb_dff_asyncres.v) 
+2. List so as to ensure that it has been added to the simulator
+( ls)
+3. To dump the VCD file
+(./a.out)
+4. To load the VCD file in GTKwaveform
+( gtkwave tb_dff_asyncres.vcd)
+
+
+ Behavior of DFF with Asynchronous Reset using gtkwave
+![image](https://user-images.githubusercontent.com/104729600/166183022-b8194604-67e2-40d8-8b34-ed3f5d9238ad.png)
+
+Observation: The output does not pause to wait for the clock to strike (independent of positive edge of the clock).
+
+### FLIP FLOP SIMULATION
+
+//Steps Followed:
+1. Invoke Yosys
+     (yosys)
+2. Read library 
+(read_liberty -lib ../my_lib/lib/sky130_fd_sc_hd__tt_025C_1v80.lib)
+3. Read Design
+(read_verilog dff_asyncres.v)
+4. Synthesize Design - this controls which module to synthesize
+( synth -top dff_asyncres)
+5. there will be a separate flop library under a standard library
+
+( dfflibmap -liberty ../my_lib/lib/sky130_fd_sc_hd__tt_025C_1v80.lib)
+6. Generate Netlist
+( abc -liberty ../my_lib/lib/sky130_fd_sc_hd__tt_025C_1v80.lib)
+7. Realizing Graphical Version of Logic for single modules
+ (show) 
+8. Writing the netlist in a crisp manner 
+( write_verilog -noattr dff_asyncres_ff.v)
+(!gvim dff_asyncres_ff.v)
+
+fig : Statistics of D FLipflop with Asynchronous Reset
+![image](https://user-images.githubusercontent.com/104729600/166183291-d684d89a-1ed8-4cc3-8604-94e8ef0f2932.png)
+
+fig :Realization of the Logic
+![image](https://user-images.githubusercontent.com/104729600/166183324-33905a06-15b4-4469-92ae-25b8419713d1.png)
+
+fig: NetList File of D FLipflop with Asynchronous Reset
+![image](https://user-images.githubusercontent.com/104729600/166183350-67efdcae-5b84-433b-b41b-6b1781c43ba1.png)
+
+## OPTIMIZATION TECHNIQUES
+//Steps Followed:
+1. modules used for this experiment are opened using the command    (gvim mult_*.v -o)
+2. invoke Yosys
+     (yosys)
+3. Read library 
+  (read_liberty -lib ../my_lib/lib/sky130_fd_sc_hd__tt_025C_1v80.lib)
+4. Read Design
+ (read_verilog mult_2.v)
+5. Synthesize Design - this controls which module to synthesize
+(synth -top mult_2)
+6. Generate Netlist
+(abc -liberty ../my_lib/lib/sky130_fd_sc_hd__tt_025C_1v80.lib)
+7. Realizing Graphical Version of Logic for single modules
+( show )
+8.Writing the netlist in a crisp manner 
+(write_verilog -noattr mult_2.v)
+(!gvim mult_2.v)
+
+CASE 1: mult_2.v
+Mul2: It takes a three-bit input and produces a four-bit output. The output has a connection that is double that of the input. The output appears to be the same as the input, but with zeros appended. In an ideal world, no hardware is required without the use of a multiplier.
+fig : Expected logic from RTL file
+
+![image](https://user-images.githubusercontent.com/104729600/166183598-0d793bf5-9465-45a2-8b77-fa8229b0d261.png)
+
+fig: Statistics of D FLipflop with Asynchronous Reset
+
+![image](https://user-images.githubusercontent.com/104729600/166183627-8732bfb0-7c08-4ddb-9447-e713e96ede6c.png)
+
+
+after optimisation No hardware requirements - No # of memories, memory bites, processes and cells. Number of cells inferred is 0.
+
+abc command return due to absence of standard cell library
+![image](https://user-images.githubusercontent.com/104729600/166183657-e4f29cc7-1b5d-4266-9cfd-6d65a2ea9296.png)
+
+
+
+fig : Realization of the Logic after synthesis
+
+![image](https://user-images.githubusercontent.com/104729600/166183759-bbeedf1f-1f6d-428e-a130-83114286e997.png)
