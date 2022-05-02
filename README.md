@@ -116,39 +116,48 @@ Steps Followed:
 FIG: Steps for Design Synthesis
 ![image](https://user-images.githubusercontent.com/104729600/166175798-856d4fc3-647f-4ba4-bebc-c152ceff5dea.png)
 
-FIG: Graphical Representation of the Logic using show commanD
+FIG: Graphical Representation of the Logic using show command
+
 ![image](https://user-images.githubusercontent.com/104729600/166175843-cf1ba9b0-8534-4b72-8310-f3c93eb8d99b.png)
 
 ![image](https://user-images.githubusercontent.com/104729600/166175861-4d41ca91-f0a8-4cbc-ac57-17c092115bc3.png)
 
 FIG: Writing the Netlist
+
 ![image](https://user-images.githubusercontent.com/104729600/166175892-6013bfa8-5d6a-45bf-babb-0351c37ce75b.png)
 
 
 ## THE LIBRARY
+
 Process (Variations due to Fabrications), Voltage (Changes in the behaviour of the circuit), and Temperature are three critical parameters that govern how Silicon functions in a design (Sensitivity of semiconductors). To model these variations, libraries are characterised.
 
 1)	Steps Followed:
-2)	Command to open the libary file
-3)	gvim ../my_lib/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
-4)	To shut off the background colors/ syntax off:
-5)	 syn off
-sky130_fd_sc_hd__tt_025C_1v80.lib
+1)	Command to open the libary file (	gvim ../my_lib/lib/sky130_fd_sc_hd__tt_025C_1v80.lib)
+2)	To shut off the background colors/ syntax off (	 syn off)
+(sky130_fd_sc_hd__tt_025C_1v80.lib)
 
 
 PARAMETERS	MEANING
 SKY130	Technology - CMOS
+
 fd	Foundary - Skywater
+
 sc	Standard Cell - Digital
+
 hd	Density - High
+
 tt	Process - Typical
+
 025C	Temperature - Measure
+
 1v80	Voltage - Measure
 
+
 ## HIERARCHICAL SYNTHESIS
+
 Steps Followed:
 1)	gvim multiple_modules.v
-2)	Yosys
+(	Yosys)
 3)	read_liberty -lib ../my_lib/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
 4)	read_verilog multiple_modules.v
 5)	synth -top multiple_modules
@@ -168,6 +177,8 @@ Steps Followed:
 ![image](https://user-images.githubusercontent.com/104729600/166176045-2a937e6f-19c4-4895-9cbc-f3d8d894f4ff.png)
 
 ###	MULTIPLE MODULES IN GTKWAVE
+
+
 ![image](https://user-images.githubusercontent.com/104729600/166176109-9e03c0b1-ce46-46ee-8253-06817fa8aa3a.png)
 
 SYNTHESIS
@@ -175,46 +186,57 @@ SYNTHESIS
 ![image](https://user-images.githubusercontent.com/104729600/166176132-7761f3b5-d741-47c5-a544-bcb696f1393e.png)
 
 ##	FLAT SYNTHESIS
+
 Steps Followed:
 //To flatten the netlist
-•	flatten
+1. 	flatten
 //Writing the netlist in a crisp manner and to view it
-•	write_verilog -noattr multiple_modules_flat.v
-•	!gvim multiple_modules_flat.v
+2. write_verilog -noattr multiple_modules_flat.v
+3. 	!gvim multiple_modules_flat.v
+
 
 ![image](https://user-images.githubusercontent.com/104729600/166176174-84637c47-9e0b-4071-ac66-af9933336014.png)
 
-•	SUB MODULE LEVEL SYNTHESIS
+
+###	SUB MODULE LEVEL SYNTHESIS
 
 When there are several instances of the same module, sub-module level synthesis is favoured. In terms of time, sythesizing the same module multiple times may not be advantageous. Instead, synthesising one module, replicating its netlist, and stitching it together in the top module can be done. This is especially useful in large-scale designs that employ the divide-and-conquer strategy
 
-Steps Followed:
-//Invoke Yosys
-o	yosys
-//Read library 
-o	read_liberty -lib ../my_lib/lib/sky130_fd_sc_hd_-tt_025C_1v80.lib
-//Read Design
-o	read_verilog multiple_modules.v
-//Synthesize Design - this controls which module to synthesize
-o	synth -top sub_module1
-//Generate Netlist
-o	abc -liberty ../my_lib/lib/sky130_fd_sc_hd_-tt_025C_1v80.lib
-//Realizing Graphical Version of Logic for single modules
-o	show 
-//Writing the netlist 
-o	write_verilog -noattr multiple_modules_hier.v
-o	!gvim multiple_modules_hier.v
+##### Steps Followed:
+1. Invoke Yosys
+	(yosys)
+ 2. Read library 
+(read_liberty -lib ../my_lib/lib/sky130_fd_sc_hd_-tt_025C_1v80.lib)
+3. Read Design
+(read_verilog multiple_modules.v)
+4. Synthesize Design - this controls which module to synthesize
+(synth -top sub_modulel)
+5. Generate Netlist
+(	abc -liberty ../my_lib/lib/sky130_fd_sc_hd_-tt_025C_1v80.lib)
+6. Realizing Graphical Version of Logic for single modules
+(show) 
+7. Writing the netlist 
+(	write_verilog -noattr multiple_modules_hier.v)
+(!gvim multiple_modules_hier.v)
 
-SUBMODULE REALIAZATION OF SUBMODULE
+
+### SUBMODULE REALIAZATION OF SUBMODULE
 
 ![image](https://user-images.githubusercontent.com/104729600/166176270-ef1a277d-1c3a-4c7d-b6ed-642ae91b1076.png)
 
 Statistics of Sub-module
+
 ![image](https://user-images.githubusercontent.com/104729600/166176307-3e7988dd-218d-4119-a338-f1da5b2580da.png)
+
+
  fig :NetList File of Sub-module
+ 
+ 
 ![image](https://user-images.githubusercontent.com/104729600/166176341-bdb9a152-fbcf-474b-8d66-0bf1c05f049e.png)
 
-##FLIP FLOP OVERVIEW
+##  FLIP FLOP OVERVIEW
+
+
 When an input signal changes state in a digital design, the output signal changes after a propagation delay. Singals are delayed by all logic gates. These delays generate expected and unwanted transitions in the output, known as Glitches, in which the output value differs from the predicted value for a brief period of time. When the signals are merged at the output gate, an increase in delay on one line can produce a glitch. In other words, more combinational circuits result in more glitchy outputs that do not settle with the output value.there is a need to store the values called as flop elements. D Flip-flops (aka Data or Delay Flip Flops) are the widely storage elements used to restrict the glitches.
 
 ![image](https://user-images.githubusercontent.com/104729600/166182674-4a6a6a59-e040-4acd-b985-3de6dab55845.png)
@@ -222,17 +244,22 @@ When an input signal changes state in a digital design, the output signal change
 Flop elements hold a single bit of data and can be in one of two states: 0 or 1. They're sandwiched between the combinational circuits, and the output of the flop changes as the clock edge approaches. Although the input is erratic, the outcome is consistent. As a result, the next combinational circuit will get a stable input, and its output will be predictable and stable.
 
  RTL codeing of a Flip Flop:
+ 
 Every flop element needs an initial state, else the combinational circuit will evaluate to a garbage value. In order to achieve this, there are control pins in the flop namely: Set and Reset which can either be Synchronous or Asynchronous.
 
 ### Asynchronous Reset/Set:
 
 ![image](https://user-images.githubusercontent.com/104729600/166182756-8a4c8889-0ae2-4f47-a467-8b03d587c695.png)
 
+
 ![image](https://user-images.githubusercontent.com/104729600/166182778-f3c061be-9342-4947-abcc-d4e0a4b994bd.png)
+
 
 When there is a change in the clock or the set/reset, the always block is evaluated. The circuit is sensitive to the clock's positive edge. The singal q line changes as the signal goes low/high, depending on the reset or set control. As a result, it does not occur on the clock's positive edge and occurs regardless of the time.
 
 ### Synchronous Reset:
+
+
 ![image](https://user-images.githubusercontent.com/104729600/166182833-0246c1b4-75a6-496e-8ba7-bd65064636c0.png)
 
 The singal is always waiting for the clock and is set to the D Pin of the flop. The D pin will wait for the clock's positive edge, and if it occurs, the output will alter accordingly. Only posedge clk is included in the sensitivity list.
@@ -256,9 +283,14 @@ FLIP FLOP SIMULATION
 
 
  Behavior of DFF with Asynchronous Reset using gtkwave
+ 
+ 
 ![image](https://user-images.githubusercontent.com/104729600/166183022-b8194604-67e2-40d8-8b34-ed3f5d9238ad.png)
 
+
 Observation: The output does not pause to wait for the clock to strike (independent of positive edge of the clock).
+
+
 
 ### FLIP FLOP SIMULATION
 
@@ -283,12 +315,17 @@ Observation: The output does not pause to wait for the clock to strike (independ
 (!gvim dff_asyncres_ff.v)
 
 fig : Statistics of D FLipflop with Asynchronous Reset
+
+
 ![image](https://user-images.githubusercontent.com/104729600/166183291-d684d89a-1ed8-4cc3-8604-94e8ef0f2932.png)
 
 fig :Realization of the Logic
+
 ![image](https://user-images.githubusercontent.com/104729600/166183324-33905a06-15b4-4469-92ae-25b8419713d1.png)
 
 fig: NetList File of D FLipflop with Asynchronous Reset
+
+
 ![image](https://user-images.githubusercontent.com/104729600/166183350-67efdcae-5b84-433b-b41b-6b1781c43ba1.png)
 
 ## OPTIMIZATION TECHNIQUES
@@ -310,7 +347,8 @@ fig: NetList File of D FLipflop with Asynchronous Reset
 (write_verilog -noattr mult_2.v)
 (!gvim mult_2.v)
 
-CASE 1: mult_2.v
+#### CASE 1: mult_2.v
+
 Mul2: It takes a three-bit input and produces a four-bit output. The output has a connection that is double that of the input. The output appears to be the same as the input, but with zeros appended. In an ideal world, no hardware is required without the use of a multiplier.
 fig : Expected logic from RTL file
 
@@ -324,6 +362,7 @@ fig: Statistics of D FLipflop with Asynchronous Reset
 after optimisation No hardware requirements - No # of memories, memory bites, processes and cells. Number of cells inferred is 0.
 
 abc command return due to absence of standard cell library
+
 ![image](https://user-images.githubusercontent.com/104729600/166183657-e4f29cc7-1b5d-4266-9cfd-6d65a2ea9296.png)
 
 
@@ -341,15 +380,18 @@ fig: NetList File of Sub-modul
 # DAY 3 :
 
 ## LOGIC CIRCUITS OVERVIEW
+
 Combinational and sequential logic circuits are the two types of digital logic circuits. Combinational circuits are a group of fundamental logic gates whose output is solely determined by the current inputs and do not require any clocks. They produce a basic circuit that can implement sophisticated logic using only logic gates. Sequential circuits are made up of flip-flops, which are memory elements. The output of the circuit is determined by both the current and previous inputs. The output requires clock inputs due to the existence of flip-flops. As a result, they produce a sophisticated circuit that can implement complex logic using memory.
 
 
-1.) Combinational Logic Optimization Techniques
+#### 1.) Combinational Logic Optimization Techniques
 
 Logic optimization is a type of logic synthesis that aims to find an equivalent representation of a given logic circuit while adhering to one or more constraints. We perform to squeeze the logic and obtain the most optimal design, which can result in space and power savings. This can be accomplished using either the Constant Propagation Method (for example, Direct Optimization) or Boolean Logic Optimization (ex: K-Map or Quine-McCluskey Methods). The most optimal logic is attained in Constant Propogation by propogating the value of one input to the next step and all the way to the output. Synthesis tools use boolean algebra/K-map reductions to simplify difficult logic equations in Boolean Logic Optimization.
 
-2.) Sequential Logic Optimization Techniques
+#### 2.) Sequential Logic Optimization Techniques
 The continuous propogation method is one of the most basic optimization techniques for sequential circuits. When the D input is tied low in a logic design, the Q pin of the flop should always have a constant value to optimise the sequential logic. Advanced strategies for obtaining a most condensed state machine include: 1) State Optimization, which optimises the underutilised states. 2) Cloning logic is performed during physical aware synthesis (where there may be a significant routing delay if two flops are located far apart). To avoid this, clone a flip flop with a lot of positive slack and meet the timing). 3) Re-timing - the combinational logic is efficiently partitioned to reduce the delay and hence increase the throughput.
+
+
 
 ## COMBINATIONAL LOGIC OPTIMIZATION
 
@@ -376,6 +418,7 @@ fig : files for optimisation
 ![Screenshot (900)](https://user-images.githubusercontent.com/104729600/166185136-0e0c67e7-8df1-4659-9a06-fa33303048f6.png)
 
 ### CASE 1: opt_check.v
+
 fig : Expected logic from verilog file
 
 ![image](https://user-images.githubusercontent.com/104729600/166185205-3699ac61-c962-4fed-bc14-601245f7489a.png)
@@ -383,6 +426,8 @@ fig : Expected logic from verilog file
 The value of y depends on a, y = ab.
 
 for : Command for performing combinational optimization using constant propogation method.
+
+
 ![image](https://user-images.githubusercontent.com/104729600/166185289-d6471b79-8dd1-45ce-aff7-5ca14bcc9f24.png)
 
 
@@ -390,11 +435,14 @@ for : Command for performing combinational optimization using constant propogati
 
 
 fig : realisation of the logic after synthesis
+
+
 ![image](https://user-images.githubusercontent.com/104729600/166186049-8c3e129c-8f5c-4939-a191-aacad938c0d2.png)
 
 The optimized graphical realization thus shows a 2-input AND gate being implemented
 
 ### CASE 2: opt_check2.v
+
 image:  logic from verilog file
 
 ![image](https://user-images.githubusercontent.com/104729600/166186181-0e88c738-7b5f-49b8-a436-a5bff6b1bdb4.png)
@@ -408,6 +456,7 @@ fig : Realization of the Logic
 As a result, the improved graphical realisation depicts the implementation of a 2-input OR gate. Although an OR gate can be implemented using NOR, this can result in a stacked PMOS architecture, which is not recommended for design. As a result, the OR gate is implemented using NAND and NOT gates (which has stacked NMOS configuration).
 
 ### CASE 3: opt_check3.v
+
 fig : logic from verilog file
 
 ![image](https://user-images.githubusercontent.com/104729600/166186418-9267e3e9-0f97-47f3-b407-746f7c93e850.png)
@@ -415,6 +464,7 @@ fig : logic from verilog file
 the realised logic is y = abc.
 
 fig : realisation after synthesis 
+
 ![image](https://user-images.githubusercontent.com/104729600/166186447-02bac336-8532-4b73-88f7-81cbb67f42db.png)
 
 The optimized graphical realization thus shows 3-input AND gate being implemented.
@@ -442,6 +492,7 @@ Due to the presence of multiple modules, the netlist was flattened before optimi
 
 
 fig :verilog file of top module
+
 ![image](https://user-images.githubusercontent.com/104729600/166186919-c17df916-0e8d-48a9-b11e-a2ce4c0c9b8a.png)
 
 
@@ -501,6 +552,7 @@ fig : Realization of the Logic
 ( show )
 
 ### CASE 1: dff_const1.v
+
 fig : logic from verilog file
 
 ![image](https://user-images.githubusercontent.com/104729600/166187921-67c97897-bee6-432e-b429-38e8e9d2c2a8.png)
@@ -573,11 +625,15 @@ fig : Statistics showing both flops being inferred
 
 
 fig : Realization of the Logic
+
+
 ![image](https://user-images.githubusercontent.com/104729600/166194479-57c1a390-38d2-433f-99fb-7467a076b245.png)
 
 ### CASE 4: dff_const4.v
 
 fig :  logic from verilog file
+
+
 ![image](https://user-images.githubusercontent.com/104729600/166194541-c8742ccc-4a3d-4ad6-b6b4-1e1dac004f9b.png)
 
 Because the output lines of both flops are constant 1, they are expected to be optimised. There will be no flops inferred from the generated netlist.
@@ -643,6 +699,7 @@ The optimized graphical realization have the same flop inferred twice.
 
 
 ### CASE 1: counter_opt.v
+
 fig : logic from verilog file
 
 ![image](https://user-images.githubusercontent.com/104729600/166195694-a190aa2b-0139-4ef2-9e84-22696fd6a368.png)
@@ -685,7 +742,6 @@ Because all three bits of the counter are used in this scenario, the optimised n
 
 fig :Statistics showing all three flops inferred
 
-
 ![image](https://user-images.githubusercontent.com/104729600/166196769-df20d5c2-9892-441f-b16f-72299da5bdc9.png)
 
 fig : Graphical Realization of the Logic
@@ -711,6 +767,7 @@ TOPICS COVERED
 5.	CAVEATS IN BLOCKING ASSIGNMENTS
 
 ## 1.GATE LEVEL SIMULATION
+
 #### What is GLS?
 
 The design's functioning was tested using stimulus inputs, and the output was checked for compliance using a test bench module. The DUT was determined to be the RTL design (Design Under Test). The Netlist is referred to as the Design Under Test in Gate Level Simulation. The RTL code that was converted to Standard Cell Gates is logically the same as the Netlist. As a result, the test bench will be consistent with the design.
@@ -737,20 +794,8 @@ What is the point of validating netlist's functioning if it is a real reciprocat
 
 ### 1. Absence of Sensitivity List:
 
+![Screenshot (918)](https://user-images.githubusercontent.com/104729600/166263843-ebd6e1ad-2d17-49e9-9fc3-5474d1bae1c7.png)
 
-module mux(
-input i0,input i1
-input sel,
-output reg y
-);
-always @ (sel)
-begin
-   if (sel)
-            y = i1;
-   else 
-            y = i0;          
-end
-endmodule
 
 
 Simulator's output only changes when the input changes. When there is no action, the output is not evaluated. When the select is changing (when select is 1), the output is 1 when the input is 1 and 0 when the input is 0. The always block only evaluates when the choose pin transitions, and it is unaffected (the output does not reflect) by changes in the inputs 0 and 1.
@@ -762,19 +807,7 @@ During Synthesis	 -----Logic acts as a Mux
 
 Corrected code for missing sensitivity list:
 
-module mux(
-input i0,input i1
-input sel,
-output reg y
-);
-always @ (*)
-begin
-   if (sel)
-            y = i1;
-   else 
-            y = i0;        
-end
-endmodule
+![Screenshot (919)](https://user-images.githubusercontent.com/104729600/166264056-c3939bff-99ab-409e-83a8-89149eb19661.png)
 
 
 
@@ -784,32 +817,13 @@ As a result, the mismatch is fixed by using always @ (*), in which the always bl
 ### 2. Blocking Vs Non Blocking Statments in Verilog:
 CAVEAT 1:
 
-
-
 When inside an always block, the problem always occurs. The statements in Blocking Statements are executed in the order that they are written. The first statement is always evaluated first, followed by the second (like a C program). The statements in Non-Blocking Statements are executed in parallel. Before being assigned to the left side, all assignments on the right side will be assessed.
 
 
-
-Assignment	         Statement
-  =	               Blocking Statment
-  <=	              Non-Blocking Statment
+![image](https://user-images.githubusercontent.com/104729600/166264475-402108c4-7d00-4d9d-9154-8a09bfa5389d.png)
 
 
-module code (input clk,input reset,
-input d,
-output reg q);
-always @ (posedge clk,posedge reset)
-begin
-if(reset)
-begin
-        q0 = 1'b0;
-        q = 1'b0;
-end
-else
-        q = q0;
-        q0 = d;    
-end
-endmodule
+![Screenshot (921)](https://user-images.githubusercontent.com/104729600/166264657-f9a92589-d8af-4afd-aa82-eeb46fe4eaff.png)
 
 the code will result in
 
@@ -819,81 +833,34 @@ the code will result in
 When two flops, like illustrated above, are combined, the code creates a shift register. The blocking statements are represented by the assignments within the code. Assigning 1 bit 0s to q0 and q results in an asynchronous reset connection. In the latter sections, however, q0 is allocated to q, and then d is assigned to q0. Let's say there's a modification in the code.
 
 
-module code (input clk,input reset,
-input d,
-output reg q);
-always @ (posedge clk,posedge reset)
-begin
-if(reset)
-begin
-        q0 = 1'b0;
-        q = 1'b0;
-end
-else
-        q0 = d;
-        q = q0;    
-end
-endmodule
+![Screenshot (922)](https://user-images.githubusercontent.com/104729600/166264781-dabced2b-77a0-4418-8aa9-2a965bfdbe3f.png)
 
 
 d is assigned to q0 in this scenario, and subsequently q0 is assigned to q. As a result, q0 has the value of d by the time the second statement is run. Only one flip will be implemented as a result of this. Previously, q had the value q0 and q0 had the value d, resulting in the use of two storage elements.
 
  ### 2. Usage of non-blocking statements
 
+![Screenshot (923)](https://user-images.githubusercontent.com/104729600/166264916-30b86973-3746-44f1-b503-786cdfb699fb.png)
 
-module code (input clk,input reset,
-input d,
-output reg q);
-always @ (posedge clk,posedge reset)
-begin
-if(reset)
-begin
-        q0 <= 1'b0;
-        q <= 1'b0;
-end
-else
-        q0 <= d;
-        q <= q0;   
-end
-endmodule
 
 
 As a result, the order doesn't matter because RHS is evaluated first, followed by assignment. The presence of two flops, regardless of their order. When writing sequential circuits, always utilise non-blocking statements.
 
 ### CAVEAT 2: Causing Synthesis Simulation Mismatch
 
-module code (input a,b,c
-output reg y);
-reg q0;
-always @ (*)
-begin
-        y = q0 & c;
-        q0 = a|b ;    
-end 
-endmodule
 
+![Screenshot (924)](https://user-images.githubusercontent.com/104729600/166265025-fdf72166-4e5a-4812-a856-8ba7d49f9bad.png)
 
 
 The code aims to generate a y = (A+B) function. C. Because there are blocking statements in the given code, they are evaluated in order when it enters always block. As a result, y is assessed first (q0.C), with q0 corresponding to the outcome of the preceding iteration. Only the second statement updates the q0 value.
 
-
-Time	                         Logic
-During Simulation           	Logic creates a delay or flop
-During Synthesis	            Logic will not have a flop
+![image](https://user-images.githubusercontent.com/104729600/166265305-3446ddc9-4f17-4411-a696-1778555503a4.png)
 
 When the order of the statements is changed: In this case, a OR b is evaluated first and the latest value is used for calculating y.
 
 
+![Screenshot (926)](https://user-images.githubusercontent.com/104729600/166265450-bc4cbbcd-69e0-416f-a5c9-2578e83c80e2.png)
 
-module code (input a,b,c
-output reg y);
-reg q0;
-always @ (*)
-begin
-        q0 = a|b ;
-        y = q0 & c;
-end 
-endmodule
 
 As a result, it's critical to run the GLS on the netlist and compare the results to the specifications to verify there's no simulation synthesis mismatch.
 
