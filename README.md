@@ -1093,64 +1093,11 @@ fig :  Synthesis Statistics Report
  
  Syntax for IF Statement
  
- if<cond>
- 
- 
-begin
- 
- 
-.....
- 
- 
-.....
- 
- 
-end
- 
- 
-else
- 
- 
-begin
- 
- 
-.....
- 
- 
-.....
- 
- 
-end
+![Screenshot (906)](https://user-images.githubusercontent.com/104729600/166238332-969c2f16-5858-465b-b310-4d83a6550b50.png)
 
  
- 
- 
  Syntax for IF-ELSE-IF Statement
- 
-if<cond1>
-begin
-.....
- executes cb1
-.....
-end
-else if<cond2>
-begin
-.....
-  executes cb2
-.....
-end
-else if<cond3>
-begin
-.....
-  executes cb3
-.....
-end
-else
-begin
-.....
-  executes cb4
-.....
-end
+
 
  
  hardware implementation 
@@ -1159,6 +1106,264 @@ end
 
  
  Condition 1 gets the highest Prority, If the condition1 is met - other conditions are not evaluated. LegN gets evaluated only if all the conditions precedding fail to meet.
+ 
+ 
+### Cautions with using IF Statements
+ 
+ Inferred latches might act as a 'warning sign,' indicating that the logic design isn't being implemented correctly. They indicate a faulty coding style that occurs as a result of missing or incomplete if statements/critical statements in the design. For example, if there is no else statement in the logic code, the hardware is unaware of the decision and will latch and attempt to hold the value. Unless the design functionality requires it, this style of design should be avoided (ex: Counter Design).
+ 
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166238741-e9be729e-800d-4de5-a914-fe2dd7ca5426.png)
+
+  ==>> Combinational circuits cannot have an inferred latch.
+ 
+ 
+##  CASE STATEMENTS
+ 
+ CASE Statements
+ 
+ The hardware implementation is a Multiplexer. Similar to IF Statements, Case statements are also used inside always block and the variable should be a register variable.
+ 
+ fig :Syntax
+ 
+ ![Screenshot (908)](https://user-images.githubusercontent.com/104729600/166239074-637d02cc-8251-4a98-b092-0f25414f9073.png)
+
+ 
+ ## Caveats in CASE Statements
+ 
+ 1. When a case statement is incomplete, it might be quite harmful. Inferred locks may be caused by structure. Code Case with default conditions to avoid inferred locks. If none of the circumstances are met, the code falls back to the default condition.
+ 
+ ![Screenshot (909)](https://user-images.githubusercontent.com/104729600/166239345-df6b3cde-fad0-4912-bd9b-7d9bb0a79fe4.png)
+
+ 
+2.  Partial Assignments in Case Statements – Values are not specified. Inferred latches will be created as a result of this. Assign all inputs in all segments of the case statement to avoid inferred latches.
+ 
+ 
+ #### Comparison between If - Else If - Else If - Else Vs Case
+ 
+ ![Screenshot (910)](https://user-images.githubusercontent.com/104729600/166239923-6c25319f-71f0-422a-8865-00459b392067.png)
+
+ 
+ //Steps Followed for all the experiments: 
+1. opening the file ( ls *incomp*)
+( gvim *incomp* -o )
+2. PERFORMING SIMULATION
+3. Load the design in iVerilog by giving the verilog and testbench file names
+(iverilog incomp_if.v tb_incomp_if.v)
+4. To dump the VCD file
+( ./a.out)
+5. To load the VCD file in GTKwaveform
+( gtkwave tb_incomp_if.vcd)
+ 
+####  PERFORMING SYNTHESIS
+1. Invoke Yosys
+( yosys)
+2. Read library 
+(read_liberty -lib ../my_lib/lib/sky130_fd_sc_hd__tt_025C_1v80.lib)
+3. Read Design
+( read_verilog incomp_if.v)
+4. Synthesize Design - this controls which module to synthesize
+( synth -top incomp_if)
+5. Generate Netlist
+(abc -liberty ../my_lib/lib/sky130_fd_sc_hd__tt_025C_1v80.lib)
+6. Realizing Graphical Version of Logic for single modules
+(show) 
+7. To write the netlist
+( write_verilog -noattr incomp_if_net.v)
+8. PERFORMING GLS
+9. Opening Verilog Models, Netlist and Test Bench
+(iverilog ../my_lib/verilog_model/primitives.v ../my_lib/verilog_model/
+sky130_fd_sc_hd.v incomp_if_net.v tb_incomp_if.v)
+10. To dump the VCD file
+(./a.out)
+11. To load the VCD file in GTKwaveform
+( gtkwave tb_incomp_if.vcd)
+ 
+ 
+ #### INCOMPLETE IF STATEMENTS
+ 
+ ##### CASE 1: incomplete if statements
+ 
+fig : Verilog file
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166241121-a488d4f4-5d51-4d23-a338-f575ac466f8e.png)
+
+ Else case is missing so there will be a D latch.
+ 
+ 
+ fig : Simulation Output
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166241206-31367aeb-1ae6-4bb0-80bd-2c9b283113ba.png)
+
+  comment : When i0 (select line) is low, the output latches to a constant value. Presence of inferred latches due to incomplete if structure
+ 
+ fig : Synthesis Statistics Report
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166241310-e1e785a9-1ce6-4958-8e27-3dd1eb51a57b.png)
+
+fig :  Synthesis Output
+
+![image](https://user-images.githubusercontent.com/104729600/166241528-f19d0266-09df-49c8-85c5-3b8d09b60dd3.png)
+ 
+ 
+ comment : The synthesized design has a D Latch inferred due to incomplete if structure (missing else statement).
+ 
+ ### CASE 2: incomplete if statements
+
+ fig: Verilog file
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166241772-89f03102-e57a-49ff-946b-19314c6c3565.png)
+
+observation :  Else case is missing so there will be a latch.
+ 
+ fig : Simulation Output
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166241933-81b28a72-81ef-4d23-8457-9548f61351c4.png)
+
+ observation :
+ When i0 is high, the output is determined by i1. The output latches to a constant value when i0 is low (when both i0 and i2 are 0). Because of the incomplete if construction, there are inferred latches.
+ 
+ 
+ fig : Synthesis Statistics Report
+
+![image](https://user-images.githubusercontent.com/104729600/166242176-f9a9e6e8-5590-45fa-8634-5513f02a65b6.png)
+
+ 
+ fig : Synthesis Output
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166242232-306a33fc-45bf-43ca-8c22-fa5da97d01b5.png)
+
+ 
+ Due to an incomplete if structure, a D latch is inferred in the synthesised design (missing else statement).
+ 
+ ####  INCOMPLETE CASE STATEMENTS
+ 
+ CASE 1: incomplete case statements
+ fig : Verilog file
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166242459-406998ce-dccd-42ef-85b6-6e4f843ed99c.png)
+
+ 
+ observation : There is an incomplete case structure, so a latch is expected.
+ 
+ fig : Simulation Output
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166242585-c0eb7f6a-23c9-46b1-8bf6-0c4e813b6bb8.png)
+
+ 
+inspection :  When select signal is 00, the output follows i0 and is i1 when the select value is 01. Since the output is undefined for 10 and 11 values, the ouput latches to the previously available value.
+ 
+ fig : Synthesis Statistics Report
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166242978-6510f36c-201a-4be5-9151-60e814d9d663.png)
+
+ 
+  fig : Synthesis Output
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166243095-dcb8f846-7a5f-459d-bc35-0b85e8fe5f7c.png)
+
+ The synthesized design has a D Latch inferred due to incomplete case structure (missing output definition for 2 of the select statements)
+ 
+ #### CASE 2: incomplete case statements with default
+ 
+ fig: Verilog file
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166243240-ab718ad0-a014-401a-951a-75a9409ccf2b.png)
+
+ 
+ obs : There is an incomplete case structure but with a default condition, so a latch is not expected.
+ 
+ 
+ fig : Simulation Output 
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166243348-a1777244-da92-4db5-b1f6-d6b9a31ffc66.png)
+
+ 
+ When the select signal is 00, the output is i0, and when the select value is 01, the output is i1. The existence of default sets the output to i2 when the choose line is 10 or 11 because the output is undefined for these values. The output will not latch, and the circuit will not be a correct combination
+ 
+ 
+ fig: Synthesis Statistics Report
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166243499-000825c9-920b-4595-aada-c6cda4b27ec7.png)
+
+ fig: Synthesis Output
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166243562-d74a8d1c-de14-4de6-98d4-93643bd73505.png)
+
+ obs : The synthesized design has combinational logic without latch due to the presence of default case statement
+ 
+####  CASE 3: partial case statement
+ 
+  fig :Verilog file
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166243728-1be58e3f-bed9-47ee-aa3d-531232dbb9d0.png)
+
+ 
+ here is a partial case structure with output of x undefined for one of the select values, so a latch is not expected.
+ 
+ The mux for output y will not have a latch, while there will be a latch for mux with output x as one of the conditions is not defined
+ 
+ ![Screenshot (911)](https://user-images.githubusercontent.com/104729600/166244190-f2f956c8-f539-4a67-a0cc-65d1bb0d5b45.png)
+
+ fig : Synthesis Statistics Report
+ 
+![image](https://user-images.githubusercontent.com/104729600/166244361-d727c457-5c8c-4d7a-a7e4-18035b8483ab.png)
+
+ 
+ Synthesis Output
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
  
  
  
