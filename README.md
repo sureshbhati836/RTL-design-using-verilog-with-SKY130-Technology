@@ -10,8 +10,8 @@ A cloud-based workshop on verilog encoding directives, resulting in predictable 
  3. Creating testbenches to validate the functionality of the RTL design
  4. Logic synthesis of functional RTL code
 
+![Screenshot (928)](https://user-images.githubusercontent.com/104729600/166267613-b1543bf9-e115-4541-aa48-307bb478544b.png)
 
-![Screenshot (916)](https://user-images.githubusercontent.com/104729600/166253806-80917cbb-1422-43c0-a3b5-a8af30e78770.png)
 
 
 
