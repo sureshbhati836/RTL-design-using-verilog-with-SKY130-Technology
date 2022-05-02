@@ -419,4 +419,84 @@ for : Command for performing combinational optimization using constant propogati
 ![image](https://user-images.githubusercontent.com/104729600/166185289-d6471b79-8dd1-45ce-aff7-5ca14bcc9f24.png)
 
 
+![image](https://user-images.githubusercontent.com/104729600/166186022-2f7d4de6-ff2c-4a22-bbe9-7873736bb66e.png)
+
+
+fig : realisation of the logic after synthesis
+![image](https://user-images.githubusercontent.com/104729600/166186049-8c3e129c-8f5c-4939-a191-aacad938c0d2.png)
+
+The optimized graphical realization thus shows a 2-input AND gate being implemented
+
+### CASE 2: opt_check2.v
+image:  logic from verilog file
+
+![image](https://user-images.githubusercontent.com/104729600/166186181-0e88c738-7b5f-49b8-a436-a5bff6b1bdb4.png)
+
+
+the realised logic is , y = a+b.
+fig : Realization of the Logic
+
+![image](https://user-images.githubusercontent.com/104729600/166186262-87612793-8a5f-4067-8b52-7bbd4f29c63a.png)
+
+As a result, the improved graphical realisation depicts the implementation of a 2-input OR gate. Although an OR gate can be implemented using NOR, this can result in a stacked PMOS architecture, which is not recommended for design. As a result, the OR gate is implemented using NAND and NOT gates (which has stacked NMOS configuration).
+
+### CASE 3: opt_check3.v
+fig : logic from verilog file
+
+![image](https://user-images.githubusercontent.com/104729600/166186418-9267e3e9-0f97-47f3-b407-746f7c93e850.png)
+
+the realised logic is y = abc.
+
+fig : realisation after synthesis 
+![image](https://user-images.githubusercontent.com/104729600/166186447-02bac336-8532-4b73-88f7-81cbb67f42db.png)
+
+The optimized graphical realization thus shows 3-input AND gate being implemented.
+
+
+### CASE 4: opt_check4.v
+
+ fig :logic from verilog file
+ 
+ ![image](https://user-images.githubusercontent.com/104729600/166186541-07437d6c-8446-4de8-943c-15fc34c340a2.png)
+ 
+ the realised logic is y = a'c + ac.
+
+
+![image](https://user-images.githubusercontent.com/104729600/166186632-135c5e1c-f825-4ad5-8ddc-c09725f52755.png)
+
+
+the optimized graphical realization thus shows A XNOR C gate being implemented.
+
+
+
+### CASE 5: multiple_module_opt.v
+
+Due to the presence of multiple modules, the netlist was flattened before optimizing the logic circuit
+
+
+fig :verilog file of top module
+![image](https://user-images.githubusercontent.com/104729600/166186919-c17df916-0e8d-48a9-b11e-a2ce4c0c9b8a.png)
+
+
+fig : Realization of the Logic
+
+![image](https://user-images.githubusercontent.com/104729600/166186970-a4628f6c-b5b2-4e0b-a4a5-25728106f4da.png)
+
+
+The optimized graphical realization thus shows a 2-input AND into first input of 2-input OR gate being implemented.
+
+
+### CASE 6: multiple_module_opt2.v
+
+
+fig : Verilog file
+
+
+
+
+
+
+
+
+
 
