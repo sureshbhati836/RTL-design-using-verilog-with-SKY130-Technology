@@ -20,10 +20,8 @@ A cloud-based workshop on verilog encoding directives, resulting in predictable 
 
 A low-level abstraction for representing a design circuit is the Register Tranfer Level. RTL design makes the design process easier for designers by automating it. It translates the functionality of a Hardware Description Languages (HDL)-written design circuit into similar combinational and sequential circuits. Fundamentally, Design is a set of Verilog codes that have intended functionalities to meet the standards. Simulating the RTL design ensures that it adheres to the specifications. A Simulator is used to verify or check the design, whereas a Testbench is used to apply stimuli to the design in order to test its functionality.
 
-##	SKY130 - Sky130 process node and pdk(process design kit) are an open-source packages provided by Google and skywater for 130nm technology.
-##	iverilog - Iverilog stands for Icarus verilog, is an open source verilog simulator.
-##	GTKWave - GTKWave is an open-source vcd(value change dump) waveform viewer.
-##	Yosys - Yosys is an open-source synthesis tool. These are the open-source tools used in the labs for the workshop.
+
+	![Screenshot (927)](https://user-images.githubusercontent.com/104729600/166266932-70a02782-7b5e-40e9-bf7a-1cbe826b9f5c.png)
 
 # DAY1 
 
