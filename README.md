@@ -68,7 +68,7 @@ The sky130RTLDesignAndSynthesisWorkshop Directory contains the following files: 
 4. To load the VCD file in GTKwaveform
 (gtkwave tb_good_mux.vcd)
 
-![image](https://user-images.githubusercontent.com/104729600/166175569-14b7888d-8f62-44e7-9666-f5a16b404718.png)
+
  
  
 ![image](https://user-images.githubusercontent.com/104729600/166175582-0af18d89-76a0-479a-ab8e-acc7d45f807b.png)
@@ -124,31 +124,59 @@ FIG: Writing the Netlist
 
 ![image](https://user-images.githubusercontent.com/104729600/166175892-6013bfa8-5d6a-45bf-babb-0351c37ce75b.png)
 
+# DAY2 
+
+![Screenshot (932)](https://user-images.githubusercontent.com/104729600/166289359-3d89e5b2-2c61-467b-ae2c-62826ed972ab.png)
 
 ## THE LIBRARY
 
 Process (Variations due to Fabrications), Voltage (Changes in the behaviour of the circuit), and Temperature are three critical parameters that govern how Silicon functions in a design (Sensitivity of semiconductors). To model these variations, libraries are characterised.
 
-1)	Steps Followed:
+	Steps Followed:
 1)	Command to open the libary file (	gvim ../my_lib/lib/sky130_fd_sc_hd__tt_025C_1v80.lib)
 2)	To shut off the background colors/ syntax off (	 syn off)
 (sky130_fd_sc_hd__tt_025C_1v80.lib)
 
+![Screenshot (934)](https://user-images.githubusercontent.com/104729600/166291635-2677d49b-9c6f-41f9-8455-56cb026ad300.png)
 
-PARAMETERS	MEANING
-SKY130	Technology - CMOS
 
-fd	Foundary - Skywater
 
-sc	Standard Cell - Digital
+FIG : .lib Sample File
 
-hd	Density - High
+![image](https://user-images.githubusercontent.com/104729600/166289968-5c0c4530-f45a-4541-99f4-ce1bc9a9dec8.png)
 
-tt	Process - Typical
 
-025C	Temperature - Measure
+CONTENTS OF THE LIBRARY FILE
 
-1v80	Voltage - Measure
+.lib is a collection of all available standard cells (including every flavour of the cells). It also includes the following properties for all cell combinations: Area, Power, Timing and Pin data, Capacitance, to name a few.
+
+//Steps Followed:
+1. To view the Equivalent Verilog model (in order to understand the functionality of the cell)
+to open without power ports
+2. sp ../my_lib/verilog_model/sky_130_fd_sc_hd__a2111o.behavioral.v
+
+FIG : .lib file containing the cell details for sky_130_fd_sc_hd__a2111o_1
+
+![image](https://user-images.githubusercontent.com/104729600/166290427-f93cfb6a-2cdf-4cc7-ae93-bad92c4ec1c8.png)
+
+FIG : Equivalent Verilog Model for sky_130_fd_sc_hd__a2111o_1
+
+![image](https://user-images.githubusercontent.com/104729600/166290516-8675da3e-d410-4c18-95ae-105de496924b.png)
+
+
+For this above 5-input gate, there will be 2^5 = 32 combinations for each feature value (e.g leakage power consumption for all 32 combinations)
+
+FIG : Various Flavours of AND Cell
+
+![image](https://user-images.githubusercontent.com/104729600/166290677-0a248be5-4643-43d8-8d6c-0ae705ff6f46.png)
+
+AND2 4 indicates that it is a larger cell than the other two. As a result, it has a larger footprint and higher power requirements. It also has the least amount of lag. AND2 0, on the other hand, has a longer delay because it has the smallest area and power.
+
+//Steps Followed:
+1. To open and cell 
+(cell .*and)
+2. To open variations of and cell in parallel
+(:vsp)
 
 
 ## HIERARCHICAL SYNTHESIS
@@ -236,6 +264,10 @@ Statistics of Sub-module
 
 
 When an input signal changes state in a digital design, the output signal changes after a propagation delay. Singals are delayed by all logic gates. These delays generate expected and unwanted transitions in the output, known as Glitches, in which the output value differs from the predicted value for a brief period of time. When the signals are merged at the output gate, an increase in delay on one line can produce a glitch. In other words, more combinational circuits result in more glitchy outputs that do not settle with the output value.there is a need to store the values called as flop elements. D Flip-flops (aka Data or Delay Flip Flops) are the widely storage elements used to restrict the glitches.
+
+
+
+
 
 ![image](https://user-images.githubusercontent.com/104729600/166182674-4a6a6a59-e040-4acd-b985-3de6dab55845.png)
 
@@ -377,6 +409,9 @@ fig: NetList File of Sub-module
 
 
 # DAY 3 :
+
+![Screenshot (931)](https://user-images.githubusercontent.com/104729600/166287835-a5445f2f-7bfc-46ca-9ed2-a8e0e453c3cb.png)
+
 
 ## LOGIC CIRCUITS OVERVIEW
 
@@ -520,6 +555,12 @@ fig : Realization of the Logic
 
 
 ### SEQUENTIAL LOGIC OPTIMIZATION
+
+![WhatsApp Image 2022-05-02 at 10 40 22 PM (1)](https://user-images.githubusercontent.com/104729600/166293546-4460f6d0-8749-4c38-8c98-0e6e7c0e08a9.jpeg)
+
+
+![WhatsApp Image 2022-05-02 at 10 40 23 PM](https://user-images.githubusercontent.com/104729600/166293659-6afa2d57-53b2-492d-a060-f71a1e2d89d8.jpeg)
+
 
 /Steps Followed for each of the optimization problems:
 1. To view all optimization files
@@ -758,14 +799,10 @@ q = counter2.counter1'.counter0' is the output expression. As a result, all outp
 
 # DAY 4
 
-TOPICS COVERED
-1.	GATE LEVEL SIMULATION
-2.	SYNTHESIS SIMULATION MISMATCH
-3.	EXPERIMENTS WITH GLS
-4.	MISSING SENSITIVITY LIST
-5.	CAVEATS IN BLOCKING ASSIGNMENTS
+![Screenshot (930)](https://user-images.githubusercontent.com/104729600/166285154-e0cb3a0e-211f-4dbc-bab3-918f3756fc1b.png)
 
 ## 1.GATE LEVEL SIMULATION
+
 
 #### What is GLS?
 
@@ -1006,18 +1043,14 @@ fig :  Synthesis Statistics Report
  
  For the identical set of input values, the value of output d is 0 after simulation and 1 after synthesis. As a result of the blocking assignments, there is a synthesis simulation mismatch.
  
- 
+
+
  
 # DAY 5
- 
- 	TOPICS COVERED
-1.	IF STATEMENTS
-2.	CASE STATEMENTS
-3.	INCOMPLETE IF STATEMENTS
-4.	INCOMPLETE CASE STATEMENTS
-5.	STATEMENTS USING FOR
-6.	STATEMENTS USING GENERATE
- 
+
+
+	![Screenshot (929)](https://user-images.githubusercontent.com/104729600/166276542-371134b6-d1c8-4322-9da2-a1eafc015bd4.png)
+
  
  ## 1. IF STATEMENTS
  
@@ -1419,14 +1452,17 @@ fig:  Simulation Output
 
 
  
+### CLONNING AND RETIMING
+ 
+![WhatsApp Image 2022-05-02 at 10 40 23 PM (1)](https://user-images.githubusercontent.com/104729600/166293749-74b0ea8c-d3fe-4db8-9ff6-03bc5ca97e28.jpeg)
 
  
+ ![WhatsApp Image 2022-05-02 at 10 40 24 PM](https://user-images.githubusercontent.com/104729600/166293780-15e73b1f-21c9-4753-b9e7-7833722a7d42.jpeg)
 
  
  
- 
- 
- 
+ ![WhatsApp Image 2022-05-02 at 10 40 24 PM (1)](https://user-images.githubusercontent.com/104729600/166293805-3802273b-c332-4178-9551-a2da61ad51e9.jpeg)
+
  
  
  
