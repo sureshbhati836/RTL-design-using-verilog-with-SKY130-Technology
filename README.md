@@ -936,7 +936,7 @@ As a result, it's critical to run the GLS on the netlist and compare the results
 //Steps Followed: 
 1. opening the file
 ( gvim ternary_operator_mux.v)
-2.PERFORMING SIMULATION
+2. PERFORMING SIMULATION
 3. Load the design in iVerilog by giving the verilog and testbench file names
 ( iverilog ternary_operator_mux.v tb_ternary_operator_mux.v)
 4.To dump the VCD file
@@ -954,7 +954,7 @@ As a result, it's critical to run the GLS on the netlist and compare the results
 (synth -top ternary_operator_mux)
 11. Generate Netlist
 ( abc -liberty ../my_lib/lib/sky130_fd_sc_hd__tt_025C_1v80.lib)
-12.Realizing Graphical Version of Logic for single modules
+12. Realizing Graphical Version of Logic for single modules
 ( show )
 13. Write Verilog netlist
 ( write_verilog ternary_operator_mux_net.v)
@@ -970,6 +970,7 @@ sky130_fd_sc_hd.v ternary_operator_mux_net.v tb_ternary_operator_mux.v)
 #### CASE 1: ternary_operator.v
 
 it is the simplest method to define a 2 to 1   mux as the complexity increses it became more complex and unable to handle.
+
 syntax :
 
  #### <Condition>?<True>:<False>
@@ -993,95 +994,171 @@ fig : Realization of the Logic after synthesis
 
  O NAND gate with i1 and sel, inverted io, and Or to And invert gate with sel and inverted i0 as inputs. The expression = sel'.i0 + sel.i1 yields the output y.
  
+ ![Screenshot (901)](https://user-images.githubusercontent.com/104729600/166234766-3e97009b-542b-4184-9c12-90da6053ddc0.png)
+
  
+ fig : GLS Output
  
+ ![image](https://user-images.githubusercontent.com/104729600/166234820-1c6bae46-a772-4652-94ff-5ee7740ec99c.png)
+
  
+ ### MISSING SENSITIVITY LIST
  
+ ##### CASE 2: bad_mux.v showing mismatch due to missing sensitivity list
  
+fig :  Verilog file
  
+ ![image](https://user-images.githubusercontent.com/104729600/166234934-bf6894ea-7c5c-4a75-b429-20f3ac59c53c.png)
+
  
+ The sensitivity list contains only select input. So during Simulation, the logic acts as a latch and during synthesis, it acts as a mux.
  
  
+ fig :Simulation Output
  
  
+ ![image](https://user-images.githubusercontent.com/104729600/166235020-13e93ab7-b3b4-4c4f-834d-7ee1c1bf5579.png)
+
  
+ When select is low, it is followed by i0, and the select line has no activity, therefore the output remains low. When the select is high, it follows i1, and the choose line is once again deactivated. As a result, it functions as a flip while maintaining its value.
  
+ fig :Synthesis Statistics Report
  
+ ![image](https://user-images.githubusercontent.com/104729600/166235168-9704c54f-2c4f-4521-85ea-87494f3f3588.png)
+
+ Synthesis Output
  
+ ![image](https://user-images.githubusercontent.com/104729600/166235285-c11e168d-88dc-485f-a288-194bc2c8a10c.png)
+
  
+ There is a mux inferred during synthesis of the logic.
  
+  fig : GLS Output
  
+ ![image](https://user-images.githubusercontent.com/104729600/166235368-45bf32b5-f956-42b3-94bb-36961c0a8ab4.png)
+
  
+ When the choose is low, the activity of input 0 is reflected on y, confirming the functionality of the 2x1 mux after synthesis. When the choose is high, the activity of input 1 is reflected on y as well. As a result of the missing sensitivity list, there is a synthesis simulation mismatch.
  
  
+fig : Simulation Output
+  
+ ![image](https://user-images.githubusercontent.com/104729600/166235490-10060300-7e81-42b9-978d-fbe2261a19d5.png)
+
+ (a+b) Equals d Therefore, if the inputs a,b are both 0, then a+b is also 0. d = 0 is the result. However, we notice the output d = 1 because it examines a previous value where a+b was 1.
  
  
  
+fig :  Synthesis Statistics Report
  
  
+ ![image](https://user-images.githubusercontent.com/104729600/166235596-0fe989c0-1b94-4376-85e8-12753d7b5dbe.png)
+
  
  
+  fig  : logic Synthesis Output
+
+
+ ![image](https://user-images.githubusercontent.com/104729600/166235652-3287727f-4ea7-4b2c-a52d-84c4109dcd6f.png)
+
+ The synthesized design has or 2 and gate to realize the output
  
  
+ fig : GLS Output
  
  
+ ![image](https://user-images.githubusercontent.com/104729600/166235740-7550fcb5-a226-4e66-b782-59f21cd60e2d.png)
+
  
+ For the identical set of input values, the value of output d is 0 after simulation and 1 after synthesis. As a result of the blocking assignments, there is a synthesis simulation mismatch.
  
  
  
+# DAY 5
  
+ 	TOPICS COVERED
+1.	IF STATEMENTS
+2.	CASE STATEMENTS
+3.	INCOMPLETE IF STATEMENTS
+4.	INCOMPLETE CASE STATEMENTS
+5.	STATEMENTS USING FOR
+6.	STATEMENTS USING GENERATE
  
  
+ ## 1. IF STATEMENTS
  
+ Why IF Statements?
+
+ The if statement is a conditional statement that determines which blocks of verilog code to execute based on boolean circumstances. It always comes out as Multiplexer. It's utilised for prioritisation logic and is always used inside the always block. A register should be assigned to the variable.
  
+ Syntax for IF Statement
  
+ if<cond>
  
  
+begin
  
  
+.....
  
  
+.....
  
  
+end
  
  
+else
  
  
+begin
  
  
+.....
  
  
+.....
  
  
+end
+
  
  
  
+ Syntax for IF-ELSE-IF Statement
  
+if<cond1>
+begin
+.....
+ executes cb1
+.....
+end
+else if<cond2>
+begin
+.....
+  executes cb2
+.....
+end
+else if<cond3>
+begin
+.....
+  executes cb3
+.....
+end
+else
+begin
+.....
+  executes cb4
+.....
+end
+
  
+ hardware implementation 
  
+ ![image](https://user-images.githubusercontent.com/104729600/166237354-3ab56f6d-d7b7-4c9f-80d4-664f938a1cfb.png)
+
  
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
+ Condition 1 gets the highest Prority, If the condition1 is met - other conditions are not evaluated. LegN gets evaluated only if all the conditions precedding fail to meet.
  
  
  
