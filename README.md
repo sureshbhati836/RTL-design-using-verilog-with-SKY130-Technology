@@ -562,24 +562,35 @@ As a result, the inferred flip is visible in the optimised graphical realisation
 
 ### CASE 2: dff_const2.v
 
+fig : logic from verilog file
+
+![image](https://user-images.githubusercontent.com/104729600/166192433-1a21b3c3-cc4d-4b77-bc73-8f70c63ae21c.png)
+
+fig : Verifying the Observation using Simulation
+
+![image](https://user-images.githubusercontent.com/104729600/166192537-d66da1b5-6886-4abe-8740-526b66205e8f.png)
+
+Q is constant with value of 1
 
 
+fig : Statistics showing no flop inferred
 
 
+![image](https://user-images.githubusercontent.com/104729600/166192693-b733970a-b54d-4ff6-bfe7-da3eb443c269.png)
 
 
+fig : Graphical Realization of the Logic
+
+![image](https://user-images.githubusercontent.com/104729600/166192797-a01146b2-b37b-4def-91a7-ae72dd3bcccf.png)
+
+As a result, the optimised graphical realisation has no flop inferred and is a constant value of 1, regardless of the reset or clock signals.
 
 
+### CASE 3: dff_const3.v
 
+fig : logic from verilog file
 
-
-
-
-
-
-
-
-
+![image](https://user-images.githubusercontent.com/104729600/166192857-0d61fc0b-5217-4e5c-990e-fa59bf8cd1ff.png)
 
 
 
