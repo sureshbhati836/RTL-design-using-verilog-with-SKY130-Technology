@@ -491,6 +491,94 @@ The optimized graphical realization thus shows a 2-input AND into first input of
 
 fig : Verilog file
 
+![image](https://user-images.githubusercontent.com/104729600/166187312-64ec25cc-dad5-45c6-8b42-e30924438419.png)
+
+fig : Realization of the Logic
+
+
+![image](https://user-images.githubusercontent.com/104729600/166187399-c589df47-a615-4e90-96ff-93464522e02a.png)
+
+
+![image](https://user-images.githubusercontent.com/104729600/166187417-cfa5bd09-3449-49a9-9dd1-b1dbf8086a0f.png)
+
+
+### SEQUENTIAL LOGIC OPTIMIZATION
+
+/Steps Followed for each of the optimization problems:
+1. To view all optimization files
+(ls *df*const*)
+2. To open multiple files 
+(dff_const1.v -o dff_const2.v)
+3. Performing Simulation
+4. Load the design in iVerilog by giving the verilog and testbench file names
+ (iverilog dff_const1.v tb_dff_const1.v) 
+5.To dump the VCD file
+(./a.out)
+6. To load the VCD file in GTKwaveform
+(gtkwave tb_dff_const1.vcd)
+7.Performing Synthesis
+8. Invoke Yosys 
+(yosys)
+9. Read library 
+(read_liberty -lib ../my_lib/lib/sky130_fd_sc_hd_-tt_025C_1v80.lib)
+10. Read Design
+(read_verilog dff_const1.v)
+11. Synthesize Design - this controls which module to synthesize
+(synth -top dff_const1)
+12. There will be a separate flop library under a standard library
+
+(dfflibmap -liberty ../my_lib/lib/sky130_fd_sc_hd_-tt_025C_1v80.lib)
+13. Generate Netlist
+( abc -liberty ../my_lib/lib/sky130_fd_sc_hd_-tt_025C_1v80.lib)
+14. Realizing Graphical Version of Logic for single modules
+( show )
+
+### CASE 1: dff_const1.v
+fig : logic from verilog file
+
+![image](https://user-images.githubusercontent.com/104729600/166187921-67c97897-bee6-432e-b429-38e8e9d2c2a8.png)
+
+
+
+Although Reset goes low, Q will wait for the clock to go high in order to become high. The flop will be inferred in this design.
+
+fig : Verifying the Observation using Simulation
+
+![image](https://user-images.githubusercontent.com/104729600/166188048-e63d72d3-35db-4468-9568-d45262639bfa.png)
+
+
+
+fig : Statistics showing a flop inferred
+
+![image](https://user-images.githubusercontent.com/104729600/166188088-47185412-0ed3-44ea-9a67-e8016a92aedc.png)
+
+
+fig : Realization of the Logic
+
+![image](https://user-images.githubusercontent.com/104729600/166188132-8e4ff1f8-d907-479e-901d-860939b847a3.png)
+
+As a result, the inferred flip is visible in the optimised graphical realisation. In addition, the design code has a high level of activity.
+
+
+### CASE 2: dff_const2.v
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
