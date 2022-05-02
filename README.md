@@ -891,7 +891,8 @@ As a result, the order doesn't matter because RHS is evaluated first, followed b
 
 The code aims to generate a y = (A+B) function. C. Because there are blocking statements in the given code, they are evaluated in order when it enters always block. As a result, y is assessed first (q0.C), with q0 corresponding to the outcome of the preceding iteration. Only the second statement updates the q0 value.
 
-![image](https://user-images.githubusercontent.com/104729600/166265305-3446ddc9-4f17-4411-a696-1778555503a4.png)
+![Screenshot (935)](https://user-images.githubusercontent.com/104729600/166295799-0cfcc7c1-c5fa-483e-865a-452006820d48.png)
+
 
 When the order of the statements is changed: In this case, a OR b is evaluated first and the latest value is used for calculating y.
 
