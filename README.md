@@ -5,10 +5,10 @@ it is a 5 day workshop on RTL design and synthesis.
 
 About the workshop 
 A cloud-based workshop on verilog encoding directives, resulting in predictable logic in silicon. Workshop perspectives include: 
-•	Digital logic design using verilog HDL.
-•	Functionality validation of the design using functional simulation.
-•	Creating testbenches to validate the functionality of the RTL design
-•	Logic synthesis of functional RTL code
+ 1. Digital logic design using verilog HDL.
+ 2. Functionality validation of the design using functional simulation.
+ 3. Creating testbenches to validate the functionality of the RTL design
+ 4. Logic synthesis of functional RTL code
 
 
 ![Screenshot (916)](https://user-images.githubusercontent.com/104729600/166253806-80917cbb-1422-43c0-a3b5-a8af30e78770.png)
