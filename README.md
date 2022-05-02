@@ -363,4 +363,60 @@ abc command return due to absence of standard cell library
 
 fig : Realization of the Logic after synthesis
 
-![image](https://user-images.githubusercontent.com/104729600/166183759-bbeedf1f-1f6d-428e-a130-83114286e997.png)
+![132089629-c1380335-d442-4db1-86fa-3288b69615fd](https://user-images.githubusercontent.com/104729600/166183970-38fb5a58-75b2-4c4a-b88b-1efb0fdcafde.png)
+
+
+fig: NetList File of Sub-modul
+![image](https://user-images.githubusercontent.com/104729600/166184038-4d7bb7ce-fe03-4bf0-84a8-2bf87524d1e4.png)
+
+
+
+# DAY 3 :
+
+## LOGIC CIRCUITS OVERVIEW
+Combinational and sequential logic circuits are the two types of digital logic circuits. Combinational circuits are a group of fundamental logic gates whose output is solely determined by the current inputs and do not require any clocks. They produce a basic circuit that can implement sophisticated logic using only logic gates. Sequential circuits are made up of flip-flops, which are memory elements. The output of the circuit is determined by both the current and previous inputs. The output requires clock inputs due to the existence of flip-flops. As a result, they produce a sophisticated circuit that can implement complex logic using memory.
+
+
+1.) Combinational Logic Optimization Techniques
+
+Logic optimization is a type of logic synthesis that aims to find an equivalent representation of a given logic circuit while adhering to one or more constraints. We perform to squeeze the logic and obtain the most optimal design, which can result in space and power savings. This can be accomplished using either the Constant Propagation Method (for example, Direct Optimization) or Boolean Logic Optimization (ex: K-Map or Quine-McCluskey Methods). The most optimal logic is attained in Constant Propogation by propogating the value of one input to the next step and all the way to the output. Synthesis tools use boolean algebra/K-map reductions to simplify difficult logic equations in Boolean Logic Optimization.
+
+2.) Sequential Logic Optimization Techniques
+The continuous propogation method is one of the most basic optimization techniques for sequential circuits. When the D input is tied low in a logic design, the Q pin of the flop should always have a constant value to optimise the sequential logic. Advanced strategies for obtaining a most condensed state machine include: 1) State Optimization, which optimises the underutilised states. 2) Cloning logic is performed during physical aware synthesis (where there may be a significant routing delay if two flops are located far apart). To avoid this, clone a flip flop with a lot of positive slack and meet the timing). 3) Re-timing - the combinational logic is efficiently partitioned to reduce the delay and hence increase the throughput.
+
+## COMBINATIONAL LOGIC OPTIMIZATION
+
+/Steps Followed for each of the optimization problems:
+1. to view all optimization files
+ (ls *opt_check*)
+2. Invoke Yosys
+( yosys)
+3. Read library 
+(read_liberty -lib ../my_lib/lib/sky130_fd_sc_hd__tt_025C_1v80.lib)
+4. Read Design
+(read_verilog opt_check.v)
+5. Synthesize Design - this controls which module to synthesize
+(synth -top opt_check)
+6. To perform constant propogation optimization
+ (opt_clean -purge)
+7. Generate Netlist
+( abc -liberty ../my_lib/lib/sky130_fd_sc_hd__tt_025C_1v80.lib)
+8. Realizing Graphical Version of Logic for single modules
+(show) 
+
+fig : files for optimisation 
+
+![Screenshot (900)](https://user-images.githubusercontent.com/104729600/166185136-0e0c67e7-8df1-4659-9a06-fa33303048f6.png)
+
+### CASE 1: opt_check.v
+fig : Expected logic from verilog file
+
+![image](https://user-images.githubusercontent.com/104729600/166185205-3699ac61-c962-4fed-bc14-601245f7489a.png)
+
+The value of y depends on a, y = ab.
+
+for : Command for performing combinational optimization using constant propogation method.
+![image](https://user-images.githubusercontent.com/104729600/166185289-d6471b79-8dd1-45ce-aff7-5ca14bcc9f24.png)
+
+
+
