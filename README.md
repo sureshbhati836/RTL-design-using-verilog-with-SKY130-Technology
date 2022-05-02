@@ -59,13 +59,13 @@ The sky130RTLDesignAndSynthesisWorkshop Directory contains the following files: 
  
  
  #Steps Followed:
-1	Load the design in iVerilog by giving the verilog and testbench file names
+1. Load the design in iVerilog by giving the verilog and testbench file names
 (iverilog good_mux.v tb_good_mux.v )
 2. List so as to ensure that it has been added to the simulator
 ( ls)
-3.	To dump the VCD file
+3. To dump the VCD file
 (./a.out)
-4.To load the VCD file in GTKwaveform
+4. To load the VCD file in GTKwaveform
 (gtkwave tb_good_mux.vcd)
 
 ![image](https://user-images.githubusercontent.com/104729600/166175569-14b7888d-8f62-44e7-9666-f5a16b404718.png)
@@ -269,15 +269,15 @@ The singal is always waiting for the clock and is set to the D Pin of the flop. 
 When utilising the Set and Reset control pins, use caution as they may cause race circumstances. The always block is checked for the clock's positive edge and asynchronous reset. The use of else if means that the always block has been assessed due to the clock's positive edge.
 
 FLIP FLOP SIMULATION
-#Steps Followed for analysing Asynchronous behavior:
+ Steps Followed for analysing Asynchronous behavior:
 1. Load the design in iVerilog by giving the verilog and testbench file names
        ( iverilog dff_asyncres.v tb_dff_asyncres.v) 
 2. List so as to ensure that it has been added to the simulator
-( ls)
+(ls)
 3. To dump the VCD file
-(./a.out)
+  (./a.out)
 4. To load the VCD file in GTKwaveform
-( gtkwave tb_dff_asyncres.vcd)
+   ( gtkwave tb_dff_asyncres.vcd)
 
 
  Behavior of DFF with Asynchronous Reset using gtkwave
@@ -370,7 +370,8 @@ fig : Realization of the Logic after synthesis
 ![132089629-c1380335-d442-4db1-86fa-3288b69615fd](https://user-images.githubusercontent.com/104729600/166183970-38fb5a58-75b2-4c4a-b88b-1efb0fdcafde.png)
 
 
-fig: NetList File of Sub-modul
+fig: NetList File of Sub-module
+
 ![image](https://user-images.githubusercontent.com/104729600/166184038-4d7bb7ce-fe03-4bf0-84a8-2bf87524d1e4.png)
 
 
@@ -515,7 +516,7 @@ fig : Realization of the Logic
 ![image](https://user-images.githubusercontent.com/104729600/166187399-c589df47-a615-4e90-96ff-93464522e02a.png)
 
 
-![image](https://user-images.githubusercontent.com/104729600/166187417-cfa5bd09-3449-49a9-9dd1-b1dbf8086a0f.png)
+
 
 
 ### SEQUENTIAL LOGIC OPTIMIZATION
@@ -818,7 +819,8 @@ CAVEAT 1:
 When inside an always block, the problem always occurs. The statements in Blocking Statements are executed in the order that they are written. The first statement is always evaluated first, followed by the second (like a C program). The statements in Non-Blocking Statements are executed in parallel. Before being assigned to the left side, all assignments on the right side will be assessed.
 
 
-![image](https://user-images.githubusercontent.com/104729600/166264475-402108c4-7d00-4d9d-9154-8a09bfa5389d.png)
+![Screenshot (920)](https://user-images.githubusercontent.com/104729600/166269807-7bb8db65-038c-4903-939f-98a3092231a7.png)
+
 
 
 ![Screenshot (921)](https://user-images.githubusercontent.com/104729600/166264657-f9a92589-d8af-4afd-aa82-eeb46fe4eaff.png)
